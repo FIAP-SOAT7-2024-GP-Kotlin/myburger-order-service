@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: my_burguer
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: my_burguer
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  myburguer:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      MP_PAYMENT_URL: ${MP_PAYMENT_URL}
+      MP_NOTIFICATION_URL: ${MP_NOTIFICATION_URL}
+      MP_MERCHANT_URL: ${MP_MERCHANT_URL}
+      MP_WEBHOOK_KEY: ${MP_WEBHOOK_KEY}
+      MP_ACCESS_TOKEN: ${MP_ACCESS_TOKEN}
+      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      JWT_KEY: ${JWT_KEY}
+      MP_REQUEST_URL: ${MP_REQUEST_URL}
+      MP_AUTH_TOKEN: ${MP_AUTH_TOKEN}
+      LOG_LEVEL: "DEBUG"
+
+volumes:
+  pgdata:
+
+networks:
+  myburger:
+    driver: bridge

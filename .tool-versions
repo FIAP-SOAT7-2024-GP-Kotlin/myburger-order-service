@@ -1,0 +1,4 @@
+java temurin-21.0.4+7.0.LTS
+gradle 8.9
+kubectl 1.30.3
+doctl 1.109.1
