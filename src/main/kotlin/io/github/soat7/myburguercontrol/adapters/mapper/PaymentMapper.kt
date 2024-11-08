@@ -2,7 +2,7 @@ package io.github.soat7.myburguercontrol.adapters.mapper
 
 import io.github.soat7.myburguercontrol.domain.entities.Payment
 import io.github.soat7.myburguercontrol.domain.entities.enum.PaymentStatus
-import io.github.soat7.myburguercontrol.external.db.payment.entity.PaymentEntity
+import io.github.soat7.myburguercontrol.external.db.payment.model.PaymentEntity
 import io.github.soat7.myburguercontrol.external.webservice.payment.api.PaymentStatusResponse
 
 fun Payment.toPersistence() = PaymentEntity(

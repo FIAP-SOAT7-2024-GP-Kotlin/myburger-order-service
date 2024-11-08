@@ -7,6 +7,8 @@ data class CustomerCreationRequest(
     @NotBlank
     @Size(max = 11)
     val cpf: String,
-    @NotBlank val name: String,
-    @NotBlank val email: String,
+    @NotBlank
+    val name: String,
+    @NotBlank val
+    email: String,
 )

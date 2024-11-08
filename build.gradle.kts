@@ -63,20 +63,20 @@ dependencies {
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("io.github.oshai:kotlin-logging-jvm:7.+")
 
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.postgresql:postgresql:42.7.+")
     implementation("com.google.guava:guava:33.2.1-jre")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.+")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4")
     implementation("commons-codec:commons-codec:1.17.0")
 
-    // jwt
-    implementation("io.jsonwebtoken:jjwt-api:0.12.+")
-    implementation("io.jsonwebtoken:jjwt-impl:0.12.+")
-    implementation("io.jsonwebtoken:jjwt-jackson:0.12.+")
-    implementation("org.springframework.boot:spring-boot-starter-security")
+//    // jwt
+//    implementation("io.jsonwebtoken:jjwt-api:0.12.+")
+//    implementation("io.jsonwebtoken:jjwt-impl:0.12.+")
+//    implementation("io.jsonwebtoken:jjwt-jackson:0.12.+")
+//    implementation("org.springframework.boot:spring-boot-starter-security")
 
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
@@ -86,6 +86,7 @@ dependencies {
     testImplementation("io.mockk:mockk:1.+")
     testImplementation("org.testcontainers:testcontainers:$testContainerVersion")
     testImplementation("org.testcontainers:postgresql:$testContainerVersion")
+    testImplementation("org.testcontainers:mongodb:$testContainerVersion")
     testImplementation("org.testcontainers:mockserver:$testContainerVersion")
     testImplementation("org.mock-server:mockserver-client-java:5.+")
     testImplementation("org.testcontainers:junit-jupiter:$testContainerVersion")
@@ -98,6 +99,7 @@ dependencies {
     // Liquibase
     liquibaseRuntime("info.picocli:picocli:4.+")
     liquibaseRuntime("org.liquibase:liquibase-core:4.+")
+    liquibaseRuntime("org.liquibase.ext:liquibase-mongodb:4.20.0")
     liquibaseRuntime("org.postgresql:postgresql:42.7.+")
     liquibaseRuntime("org.liquibase.ext:liquibase-hibernate6:4.+")
     liquibaseRuntime("org.springframework.boot:spring-boot-starter-data-jpa")

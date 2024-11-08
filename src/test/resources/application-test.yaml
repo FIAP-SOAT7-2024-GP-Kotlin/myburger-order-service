@@ -6,19 +6,13 @@ logging:
     org.hibernate.SQL: DEBUG
 
 spring:
-  datasource:
-    schema: myburguer
-    url: ${DATABASE_URL}
-    username: ${DATABASE_USER}
-    password: ${DATABASE_PASSWORD}
-  jpa:
-    database: POSTGRESQL
-    show-sql: true
-    hibernate:
-      ddl-auto: validate
-    properties:
-      hibernate:
-        default_schema: ${spring.datasource.schema}
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+      database: ${MONGODB_DATABASE}
+      collection:
+        orders: ${MONGODB_COLLECTION_ORDERS}
+        customers: ${MONGODB_COLLECTION_CUSTOMERS}
   liquibase:
     change-log: classpath:/db/changelog/master.xml
     enabled: true

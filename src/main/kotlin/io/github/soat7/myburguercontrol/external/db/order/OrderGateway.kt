@@ -4,8 +4,7 @@ import io.github.soat7.myburguercontrol.adapters.gateway.OrderRepository
 import io.github.soat7.myburguercontrol.adapters.mapper.toDomain
 import io.github.soat7.myburguercontrol.adapters.mapper.toPersistence
 import io.github.soat7.myburguercontrol.domain.entities.Order
-import io.github.soat7.myburguercontrol.external.db.order.repository.OrderJpaRepository
-import io.github.soat7.myburguercontrol.external.db.product.repository.ProductJpaRepository
+import io.github.soat7.myburguercontrol.external.db.order.repository.OrderDatabaseRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
@@ -13,16 +12,12 @@ import java.util.UUID
 
 @Component
 class OrderGateway(
-    private val repository: OrderJpaRepository,
-    private val productJpaRepository: ProductJpaRepository,
+    private val repository: OrderDatabaseRepository,
 ) : OrderRepository {
 
-    override fun create(order: Order): Order = run {
-        repository.save(
-            order.toPersistence(order.customer?.toPersistence(), order.payment?.toPersistence()) {
-                productJpaRepository.findById(it).get()
-            },
-        ).toDomain()
+    override fun create(order: Order): Order {
+        val result = repository.create(order.toPersistence())
+        return result.toDomain()
     }
 
     override fun findByCustomerId(customerId: UUID): List<Order> =
@@ -33,15 +28,11 @@ class OrderGateway(
             .map { it.toDomain() }
 
     override fun update(order: Order): Order {
-        return repository.save(
-            order.toPersistence(order.customer?.toPersistence(), order.payment?.toPersistence()) {
-                productJpaRepository.findById(it).get()
-            },
-        ).toDomain()
+        return repository.update(order.toPersistence())?.toDomain() ?: throw RuntimeException("Order not found")
     }
 
     override fun findById(orderId: UUID): Order? {
-        return repository.findById(orderId).get().toDomain()
+        return repository.findById(orderId)?.toDomain()
     }
 
     override fun findAll(pageable: Pageable): Page<Order> =
