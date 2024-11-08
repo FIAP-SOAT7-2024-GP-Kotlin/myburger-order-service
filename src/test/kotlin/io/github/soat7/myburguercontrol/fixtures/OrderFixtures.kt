@@ -6,8 +6,8 @@ import io.github.soat7.myburguercontrol.domain.entities.OrderItem
 import io.github.soat7.myburguercontrol.domain.entities.Payment
 import io.github.soat7.myburguercontrol.domain.entities.enum.OrderStatus
 import io.github.soat7.myburguercontrol.external.db.customer.entity.CustomerEntity
-import io.github.soat7.myburguercontrol.external.db.order.entity.OrderEntity
-import io.github.soat7.myburguercontrol.external.db.order.entity.OrderItemEntity
+import io.github.soat7.myburguercontrol.external.db.order.model.OrderEntity
+import io.github.soat7.myburguercontrol.external.db.order.model.OrderItemEntity
 import io.github.soat7.myburguercontrol.external.db.payment.entity.PaymentEntity
 import io.github.soat7.myburguercontrol.external.db.product.entity.ProductEntity
 import io.github.soat7.myburguercontrol.fixtures.ProductFixtures.mockDomainProduct
@@ -49,7 +49,7 @@ object OrderFixtures {
             OrderItemEntity(
                 id = UUID.randomUUID(),
                 this,
-                product = product,
+                productId = product,
                 quantity = 1,
             ),
         )

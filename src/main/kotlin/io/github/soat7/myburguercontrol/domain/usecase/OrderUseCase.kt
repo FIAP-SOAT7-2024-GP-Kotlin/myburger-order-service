@@ -1,7 +1,6 @@
 package io.github.soat7.myburguercontrol.domain.usecase
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import io.github.soat7.myburguercontrol.domain.entities.Customer
 import io.github.soat7.myburguercontrol.domain.entities.Order
 import io.github.soat7.myburguercontrol.domain.entities.OrderDetail
 import io.github.soat7.myburguercontrol.domain.entities.OrderItem
@@ -18,20 +17,23 @@ private val logger = KotlinLogging.logger {}
 class OrderUseCase(
     private val orderGateway: OrderGateway,
     private val customerUseCase: CustomerUseCase,
-    private val productUseCase: ProductUseCase,
 ) {
 
     fun createOrder(orderDetail: OrderDetail): Order {
-        var customer: Customer? = null
+        val customer = orderDetail.customerCpf
+            ?.takeIf { it.isNotBlank() }
+            ?.let {
+                customerUseCase.findCustomerByCpf(it)
+                    ?: throw ReasonCodeException(ReasonCode.CUSTOMER_NOT_FOUND)
+            }
 
-        if (orderDetail.customerCpf.isNotBlank()) {
-            customer = customerUseCase.findCustomerByCpf(orderDetail.customerCpf)
-                ?: throw ReasonCodeException(ReasonCode.CUSTOMER_NOT_FOUND)
-        }
-
-        val items = buildOrderItems(orderDetail)
-
-        val order = setupOrder(customer, items)
+        val order = orderGateway.create(
+            Order(
+                id = UUID.randomUUID(),
+                customerId = customer?.id,
+                items = buildOrderItems(orderDetail),
+            ),
+        )
 
         return orderGateway.update(order.copy(status = OrderStatus.RECEIVED))
     }
@@ -55,38 +57,20 @@ class OrderUseCase(
     }
 
     fun changeOrderStatus(status: OrderStatus, orderId: UUID): Order {
-        return orderGateway.update(
-            orderGateway.findById(orderId)?.copy(status = status)
-                ?: throw ReasonCodeException(ReasonCode.ORDER_NOT_FOUND),
-        )
+        logger.info { "Changing order status to: [$status] for order: [$orderId]" }
+        return orderGateway.findById(orderId)
+            ?.let { orderGateway.update(it.copy(status = status)) }
+            ?: throw ReasonCodeException(ReasonCode.ORDER_NOT_FOUND)
     }
 
     private fun buildOrderItems(orderDetail: OrderDetail): List<OrderItem> {
-        val items = orderDetail.items.map { item ->
-            productUseCase.findById(item.productId)?.let { product ->
-                OrderItem(
-                    id = UUID.randomUUID(),
-                    product = product,
-                    quantity = item.quantity,
-                    comment = item.comment,
-                )
-            } ?: throw ReasonCodeException(ReasonCode.INVALID_PRODUCT)
+        return orderDetail.items.map { item ->
+            OrderItem(
+                productId = item.productId,
+                quantity = item.quantity,
+                comment = item.comment,
+                price = item.price,
+            )
         }
-        return items
-    }
-
-    private fun setupOrder(
-        customer: Customer?,
-        items: List<OrderItem>,
-    ): Order {
-        val order = orderGateway.create(
-            Order(
-                id = UUID.randomUUID(),
-                customer = customer,
-                items = items,
-            ),
-        )
-
-        return orderGateway.update(order.copy())
     }
 }

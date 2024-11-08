@@ -9,12 +9,12 @@ import java.util.UUID
 
 data class Order(
     val id: UUID,
-    val customer: Customer?,
+    val customerId: UUID? = null,
     val items: List<OrderItem> = listOf(),
     val status: OrderStatus = OrderStatus.NEW,
     val createdAt: Instant = Instant.now(),
-    val payment: Payment? = null,
+    val paymentId: UUID? = null,
 ) {
     val total: BigDecimal
-        get() = items.sumOf { it.product.price * it.quantity.toBigDecimal() }.setScale(DEFAULT_BIG_DECIMAL_SCALE)
+        get() = items.sumOf { it.price * it.quantity.toBigDecimal() }.setScale(DEFAULT_BIG_DECIMAL_SCALE)
 }

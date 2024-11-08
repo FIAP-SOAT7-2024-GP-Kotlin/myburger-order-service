@@ -9,8 +9,8 @@ import io.github.soat7.myburguercontrol.domain.entities.Payment
 import io.github.soat7.myburguercontrol.domain.entities.enum.UserRole
 import io.github.soat7.myburguercontrol.external.db.customer.entity.CustomerEntity
 import io.github.soat7.myburguercontrol.external.db.customer.repository.CustomerJpaRepository
-import io.github.soat7.myburguercontrol.external.db.order.entity.OrderEntity
-import io.github.soat7.myburguercontrol.external.db.order.repository.OrderJpaRepository
+import io.github.soat7.myburguercontrol.external.db.order.model.OrderEntity
+import io.github.soat7.myburguercontrol.external.db.order.repository.OrderDatabaseRepository
 import io.github.soat7.myburguercontrol.external.db.payment.entity.PaymentEntity
 import io.github.soat7.myburguercontrol.external.db.payment.repository.PaymentJpaRepository
 import io.github.soat7.myburguercontrol.external.db.product.entity.ProductEntity
@@ -52,7 +52,7 @@ class BaseIntegrationTest {
     protected lateinit var customerJpaRepository: CustomerJpaRepository
 
     @Autowired
-    protected lateinit var orderJpaRepository: OrderJpaRepository
+    protected lateinit var orderDatabaseRepository: OrderDatabaseRepository
 
     @Autowired
     protected lateinit var userJpaRepository: UserJpaRepository
@@ -71,7 +71,7 @@ class BaseIntegrationTest {
         userJpaRepository.deleteAll()
 
         println("Cleaning Order database...")
-        orderJpaRepository.deleteAll()
+        orderDatabaseRepository.deleteAll()
 
         authenticationHeader = buildAuthentication()
     }
@@ -120,6 +120,6 @@ class BaseIntegrationTest {
         payment: PaymentEntity,
         status: String? = null,
     ): OrderEntity {
-        return orderJpaRepository.save(OrderFixtures.mockOrderEntity(customer, product, payment, status))
+        return orderDatabaseRepository.create(OrderFixtures.mockOrderEntity(customer, product, payment, status))
     }
 }

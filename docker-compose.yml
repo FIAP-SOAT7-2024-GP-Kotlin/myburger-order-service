@@ -1,17 +1,7 @@
-version: '3'
+version: '3.8'
 
 services:
-  db:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_USER: my_burguer
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: my_burguer
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-  myburguer:
+  my-burger-order-service:
     platform: linux/amd64
     build:
       context: .
@@ -19,13 +9,9 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      - mongodb
     environment:
-      MP_PAYMENT_URL: ${MP_PAYMENT_URL}
-      MP_NOTIFICATION_URL: ${MP_NOTIFICATION_URL}
-      MP_MERCHANT_URL: ${MP_MERCHANT_URL}
-      MP_WEBHOOK_KEY: ${MP_WEBHOOK_KEY}
-      MP_ACCESS_TOKEN: ${MP_ACCESS_TOKEN}
+      PAYMENT_SERVICE_URL: ${MP_PAYMENT_URL}
       DATABASE_URL: ${DATABASE_URL}
       DATABASE_USER: ${DATABASE_USER}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
@@ -33,10 +19,28 @@ services:
       MP_REQUEST_URL: ${MP_REQUEST_URL}
       MP_AUTH_TOKEN: ${MP_AUTH_TOKEN}
       LOG_LEVEL: "DEBUG"
+  mongodb:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
+  wiremock:
+    platform: linux/amd64
+    image: holomekc/wiremock-gui:3.5.7-alpine
+    ports:
+      - "9090:8080"
+    volumes:
+      - ./mappings:/home/wiremock/mappings
+    entrypoint: ["/docker-entrypoint.sh", "--global-response-templating", "--disable-gzip", "--verbose"]
 
 volumes:
-  pgdata:
+  data:
 
 networks:
-  myburger:
+  my-burger:
     driver: bridge

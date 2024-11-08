@@ -13,10 +13,12 @@ class OrderHandler(
     private val orderUseCase: OrderUseCase,
 ) {
 
-    fun create(request: OrderCreationRequest) = orderUseCase.createOrder(request.toOrderDetails()).toResponse()
+    fun create(request: OrderCreationRequest) =
+        orderUseCase.createOrder(request.toOrderDetails()).toResponse()
 
-    fun findOrdersByCustomerCpf(cpf: String) = orderUseCase.findOrdersByCustomerCpf(cpf)
-        .map { it.toResponse() }
+    fun findOrdersByCustomerCpf(cpf: String) =
+        orderUseCase.findOrdersByCustomerCpf(cpf)
+            .map { it.toResponse() }
 
     fun findOrderQueue(page: Int, size: Int) = run {
         val pageable = PageRequest.of(page, size)
@@ -31,7 +33,8 @@ class OrderHandler(
         )
     }
 
-    fun findAll(request: PageRequest) = orderUseCase.findAll(request).map { it.toResponse() }
+    fun findAll(request: PageRequest) =
+        orderUseCase.findAll(request).map { it.toResponse() }
 
     fun changeOrderStatus(status: OrderStatus, orderId: UUID) =
         orderUseCase.changeOrderStatus(status, orderId).toResponse()

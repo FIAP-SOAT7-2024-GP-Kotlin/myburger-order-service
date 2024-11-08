@@ -2,7 +2,7 @@ package io.github.soat7.myburguercontrol.fixtures
 
 import io.github.soat7.myburguercontrol.domain.entities.Payment
 import io.github.soat7.myburguercontrol.domain.entities.enum.PaymentStatus
-import io.github.soat7.myburguercontrol.external.thirdparty.api.QRCodeData
+import io.github.soat7.myburguercontrol.external.thirdparty.payment.api.QRCodeData
 import java.util.UUID
 
 object PaymentFixtures {
