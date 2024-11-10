@@ -22,38 +22,22 @@ management:
       enabled: true
     readinessstate:
       enabled: true
+
 spring:
   application.name: myburguercontrol
   config:
     import: optional:file:.env[.properties]
-  datasource:
-    schema: myburguer
-    url: jdbc:${DATABASE_URL}
-    username: ${DATABASE_USER}
-    password: ${DATABASE_PASSWORD}
-    driverClassName: org.postgresql.Driver
-    maxActive: 10
-    maxIdle: 5
-    minIdle: 2
-    initialSize: 5
-    removeAbandoned: true
-  jpa:
-    database: POSTGRESQL
-    show-sql: true
-    hibernate:
-      ddl-auto: validate
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
-        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
-    properties:
-      hibernate:
-        default_schema: ${spring.datasource.schema}
-        jdbc.batch_size: 20
-        cache:
-          use_query_cache: false
-          use_second_level_cache: false
-          use_structured_entries: false
-          use_minimal_puts: false
+  data:
+    mongodb:
+      database: my-burger
+      uuid-representation: standard
+      username: ${MONGODB_USERNAME}
+      password: ${MONGODB_PASSWORD}
+      uri: ${MONGODB_URI}
+      collection:
+        orders: orders
+        customers: customers
+
   jackson:
     default-property-inclusion: non_null
     deserialization:
@@ -63,11 +47,13 @@ spring:
       write_dates_as_timestamps: false
     property-naming-strategy: SNAKE_CASE
 
-
 third-party:
-  payment-integration:
-    url: ${MP_REQUEST_URL}
-    auth-token: ${MP_AUTH_TOKEN}
+  management-service:
+    url: ${MANAGEMENT_SERVICE_URL}
+    connectionTimeout: 5000
+    readTimeout: 5000
+  payment-service:
+    url: ${PAYMENT_SERVICE_URL}
     connectionTimeout: 5000
     readTimeout: 5000
 
@@ -83,13 +69,8 @@ springdoc:
 
 logging:
   level:
-    org:
-      springframework:
-        web: ${LOG_LEVEL:DEBUG}
-    io:
-      github:
-        soat7:
-          myburguercontrol: ${LOG_LEVEL:DEBUG}
+    org.springframework.web: ${LOG_LEVEL:DEBUG}
+    io.github.soat7.myburguercontrol: ${LOG_LEVEL:DEBUG}
 
 jwt:
   key: ${JWT_KEY}
