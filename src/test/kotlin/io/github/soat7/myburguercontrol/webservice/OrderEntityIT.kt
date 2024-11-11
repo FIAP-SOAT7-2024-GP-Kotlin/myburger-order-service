@@ -23,7 +23,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
-class OrderIT : BaseIntegrationTest() {
+class OrderEntityIT : BaseIntegrationTest() {
 
     @Test
     fun `should create a new order`() {
