@@ -27,15 +27,14 @@ class OrderUseCase(
                     ?: throw ReasonCodeException(ReasonCode.CUSTOMER_NOT_FOUND)
             }
 
-        val order = orderGateway.create(
+        return orderGateway.create(
             Order(
                 id = UUID.randomUUID(),
                 customerId = customer?.id,
                 items = buildOrderItems(orderDetail),
+                status = OrderStatus.RECEIVED,
             ),
         )
-
-        return orderGateway.update(order.copy(status = OrderStatus.RECEIVED))
     }
 
     fun findOrdersByCustomerCpf(cpf: String): List<Order> {
@@ -47,8 +46,8 @@ class OrderUseCase(
     }
 
     fun findQueuedOrders(pageable: Pageable): Page<Order> {
-        logger.info { "Finding orders with status: [${OrderStatus.NEW}]" }
-        return orderGateway.findNewOrders(OrderStatus.NEW.name, pageable)
+        logger.info { "Finding orders with status: [${OrderStatus.RECEIVED}]" }
+        return orderGateway.findNewOrders(OrderStatus.RECEIVED.name, pageable)
     }
 
     fun findAll(pageable: Pageable): Page<Order> {

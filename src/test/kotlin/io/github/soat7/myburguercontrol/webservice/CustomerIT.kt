@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
 import org.springframework.boot.test.web.client.exchange
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
@@ -26,7 +25,7 @@ class CustomerIT : BaseIntegrationTest() {
         val response = restTemplate.exchange<CustomerResponse>(
             url = "/customers",
             method = HttpMethod.POST,
-            requestEntity = HttpEntity(inputCustomerData, authenticationHeader),
+            requestEntity = HttpEntity(inputCustomerData),
         )
 
         assertAll(
@@ -34,7 +33,7 @@ class CustomerIT : BaseIntegrationTest() {
             Executable { assertNotNull(response.body) },
             Executable { assertEquals(cpf, response.body!!.cpf) },
         )
-        val savedCustomer = customerJpaRepository.findByIdOrNull(response.body!!.id)
+        val savedCustomer = customerDatabaseRepository.findById(response.body!!.id)
 
         assertAll(
             Executable { assertNotNull(savedCustomer) },
@@ -47,12 +46,12 @@ class CustomerIT : BaseIntegrationTest() {
     fun `should return BAD_REQUEST when trying to create a new customer with a cpf that is already registered`() {
         val cpf = "82709425025"
         val inputCustomerData = CustomerFixtures.mockCustomerCreationRequest(cpf)
-        customerJpaRepository.save(CustomerFixtures.mockCustomerEntity(UUID.randomUUID(), cpf))
+        customerDatabaseRepository.create(CustomerFixtures.mockCustomerEntity(UUID.randomUUID(), cpf))
 
         val response = restTemplate.exchange<Any>(
             url = "/customers",
             method = HttpMethod.POST,
-            requestEntity = HttpEntity(inputCustomerData, authenticationHeader),
+            requestEntity = HttpEntity(inputCustomerData),
         )
 
         assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
@@ -66,7 +65,7 @@ class CustomerIT : BaseIntegrationTest() {
         val response = restTemplate.exchange<CustomerResponse>(
             url = "/customers/{id}",
             method = HttpMethod.GET,
-            requestEntity = HttpEntity(null, authenticationHeader),
+            requestEntity = null,
             uriVariables = mapOf(
                 "id" to customer.id,
             ),
@@ -87,7 +86,7 @@ class CustomerIT : BaseIntegrationTest() {
         val response = restTemplate.exchange<CustomerResponse>(
             url = "/customers/{id}",
             method = HttpMethod.GET,
-            requestEntity = HttpEntity(null, authenticationHeader),
+            requestEntity = null,
             uriVariables = mapOf(
                 "id" to randomId.toString(),
             ),
@@ -104,7 +103,7 @@ class CustomerIT : BaseIntegrationTest() {
         val response = restTemplate.exchange<CustomerResponse>(
             url = "/customers?cpf={cpf}",
             method = HttpMethod.GET,
-            requestEntity = HttpEntity(null, authenticationHeader),
+            requestEntity = null,
             uriVariables = mapOf(
                 "cpf" to cpf,
             ),
@@ -125,7 +124,7 @@ class CustomerIT : BaseIntegrationTest() {
         val response = restTemplate.exchange<CustomerResponse>(
             url = "/customers?cpf={cpf}",
             method = HttpMethod.GET,
-            requestEntity = HttpEntity(null, authenticationHeader),
+            requestEntity = null,
             uriVariables = mapOf(
                 "cpf" to cpf,
             ),

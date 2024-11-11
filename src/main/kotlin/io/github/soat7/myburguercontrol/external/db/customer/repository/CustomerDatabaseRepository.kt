@@ -18,9 +18,7 @@ class CustomerDatabaseRepository(
 
     fun findByCpf(cpf: String): CustomerEntity? {
         return mongoDbTemplate.findOne(
-            Query(
-                Criteria.where("cpf").`is`(cpf),
-            ),
+            Query(Criteria.where("cpf").`is`(cpf)),
             CustomerEntity::class.java,
             collection,
         )

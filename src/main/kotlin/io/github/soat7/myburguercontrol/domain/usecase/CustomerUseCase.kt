@@ -5,10 +5,12 @@ import io.github.soat7.myburguercontrol.domain.entities.Customer
 import io.github.soat7.myburguercontrol.exception.ReasonCode
 import io.github.soat7.myburguercontrol.exception.ReasonCodeException
 import io.github.soat7.myburguercontrol.external.db.customer.CustomerGateway
+import org.springframework.stereotype.Service
 import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 
+@Service
 class CustomerUseCase(
     private val customerGateway: CustomerGateway,
 ) {

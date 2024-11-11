@@ -4,16 +4,17 @@ import io.github.soat7.myburguercontrol.domain.entities.enum.OrderStatus
 import io.github.soat7.myburguercontrol.external.db.order.OrderGateway
 import io.github.soat7.myburguercontrol.fixtures.CustomerFixtures.mockDomainCustomer
 import io.github.soat7.myburguercontrol.fixtures.OrderDetailFixtures
-import io.github.soat7.myburguercontrol.fixtures.ProductFixtures
 import io.github.soat7.myburguercontrol.util.toBigDecimal
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestMethodOrder
+import org.junit.jupiter.api.function.Executable
 import java.util.UUID
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -28,8 +29,7 @@ class OrderEntityUseCaseTest {
 
     private val repository = mockk<OrderGateway>()
     private val customerUseCase = mockk<CustomerUseCase>()
-    private val productUseCase = mockk<ProductUseCase>()
-    private val service = OrderUseCase(repository, customerUseCase, productUseCase)
+    private val service = OrderUseCase(repository, customerUseCase)
 
     @BeforeTest
     fun setUp() {
@@ -42,27 +42,25 @@ class OrderEntityUseCaseTest {
     fun `should create a new order using cpf`() {
         val cpf = "23282711034"
         val customer = mockDomainCustomer(cpf = cpf)
-        val product = ProductFixtures.mockDomainProduct()
-
         every { customerUseCase.findCustomerByCpf(cpf) } returns customer
         every { repository.create(any<OrderModel>()) } answers {
             (this.firstArg() as OrderModel).copy(id = UUID.randomUUID())
         }
-        every { productUseCase.findById(any()) } returns product
         every { repository.update(any<OrderModel>()) } answers {
             (this.firstArg() as OrderModel).copy(id = UUID.randomUUID())
         }
 
-        val order = service.createOrder(OrderDetailFixtures.mockOrderDetail(cpf = cpf, product = product))
+        val order = service.createOrder(OrderDetailFixtures.mockOrderDetail(cpf = cpf))
 
         verify(exactly = 1) { customerUseCase.findCustomerByCpf(any()) }
-        verify(exactly = 2) { repository.update(any()) }
         verify(exactly = 1) { repository.create(any()) }
 
-        assertNotNull(order.id)
-        order.customer?.let { assertEquals(cpf, it.cpf) }
-        assertEquals(OrderStatus.RECEIVED, order.status)
-        assertFalse(order.items.isEmpty())
-        assertEquals(1.0.toBigDecimal(), order.total)
+        Assertions.assertAll(
+            Executable { assertNotNull(order.id) },
+            Executable { assertEquals(customer.id, order.customerId) },
+            Executable { assertEquals(OrderStatus.RECEIVED, order.status) },
+            Executable { assertFalse(order.items.isEmpty()) },
+            Executable { assertEquals(5.99.toBigDecimal(), order.total) },
+        )
     }
 }

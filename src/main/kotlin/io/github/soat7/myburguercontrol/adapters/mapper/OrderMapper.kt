@@ -66,7 +66,7 @@ fun OrderEntity.toDomain() = Order(
     customerId = this.customerId,
     status = OrderStatus.from(this.status),
     createdAt = this.createdAt,
-    items = this.items.map { it.toDomain() as OrderItem },
+    items = this.items.map { it.toDomain() },
     paymentId = this.paymentId,
 )
 

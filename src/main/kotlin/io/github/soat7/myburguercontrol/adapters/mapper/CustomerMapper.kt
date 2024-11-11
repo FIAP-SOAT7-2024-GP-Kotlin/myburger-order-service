@@ -15,7 +15,7 @@ fun CustomerCreationRequest.toDomain() = Customer(
 )
 
 fun CustomerEntity.toDomain() = Customer(
-    id = this.id!!,
+    id = this.id,
     cpf = this.cpf,
     name = this.name,
     email = this.email,
