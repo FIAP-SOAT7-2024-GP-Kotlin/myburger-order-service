@@ -17,9 +17,11 @@ import org.springframework.boot.test.web.client.exchange
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
-import kotlin.jvm.optionals.getOrNull
+import java.math.BigDecimal
+import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 class OrderEntityIT : BaseIntegrationTest() {
 
@@ -27,19 +29,20 @@ class OrderEntityIT : BaseIntegrationTest() {
     fun `should create a new order`() {
         val cpf = "23282711034"
         val customer = insertCustomerData(mockDomainCustomer(cpf = cpf))
-        val items = insertProducts().map {
+        val items = listOf(
             OrderCreationRequest.OrderItem(
-                productId = it.id!!,
+                productId = UUID.randomUUID(),
                 quantity = 1,
-            )
-        }
+                price = 5.99.toBigDecimal(),
+            ),
+        )
 
         val inputOrderData = OrderCreationRequest(customerCpf = customer.cpf, items)
 
         val orderResponse = restTemplate.exchange<OrderResponse>(
             url = "/orders",
             method = HttpMethod.POST,
-            requestEntity = HttpEntity(inputOrderData, authenticationHeader),
+            requestEntity = HttpEntity(inputOrderData),
         )
 
         assertAll(
@@ -47,11 +50,11 @@ class OrderEntityIT : BaseIntegrationTest() {
             Executable { assertNotNull(orderResponse.body) },
         )
 
-        val order = orderDatabaseRepository.findById(orderResponse.body!!.id).getOrNull()
+        val order = orderDatabaseRepository.findById(orderResponse.body!!.id)
 
         assertAll(
             Executable { assertNotNull(order) },
-            Executable { order!!.customer?.let { assertEquals(cpf, it.cpf) } },
+            Executable { assertEquals(customer.id, order!!.customerId) },
             Executable { assertEquals(OrderStatus.RECEIVED.name, order!!.status) },
             Executable { assertFalse(order!!.items.isEmpty()) },
         )
@@ -61,19 +64,17 @@ class OrderEntityIT : BaseIntegrationTest() {
     fun `should successfully find all orders with status different of FINISHED and ordered by status and createdAt`() {
         val cpf = "34187595058"
         val customer = insertCustomerData(mockDomainCustomer(cpf = cpf))
-        val product = insertProducts().first()
         val payment = insertPaymentData(mockPayment())
 
-        saveOrder(customer, product, payment)
-
-        val receivedOrder = saveOrder(customer, product, payment, OrderStatus.RECEIVED.name)
-        val inProgressOrder = saveOrder(customer, product, payment, OrderStatus.IN_PROGRESS.name)
-        val readyOrder = saveOrder(customer, product, payment, OrderStatus.READY.name)
+        val order = saveOrder(customerId = customer.id, paymentId = payment.id)
+        val inProgressOrder =
+            saveOrder(customerId = customer.id, paymentId = payment.id, status = OrderStatus.IN_PROGRESS.name)
+        val readyOrder = saveOrder(customerId = customer.id, paymentId = payment.id, status = OrderStatus.READY.name)
 
         val response = restTemplate.exchange<PaginatedResponse<OrderResponse>>(
             url = "/orders/list",
             method = HttpMethod.GET,
-            requestEntity = HttpEntity(null, authenticationHeader),
+            requestEntity = null,
         )
 
         val orders = response.body!!.content
@@ -83,7 +84,7 @@ class OrderEntityIT : BaseIntegrationTest() {
             Executable { assertFalse(response.body!!.content.isEmpty()) },
             Executable { assertEquals(readyOrder.id, orders.first().id) },
             Executable { assertEquals(inProgressOrder.id, orders[1].id) },
-            Executable { assertEquals(receivedOrder.id, orders[2].id) },
+            Executable { assertEquals(order.id, orders[2].id) },
         )
     }
 
@@ -92,14 +93,13 @@ class OrderEntityIT : BaseIntegrationTest() {
         val cpf = "47052551004"
 
         val customer = insertCustomerData(mockDomainCustomer(cpf = cpf))
-        val product = insertProducts().first()
         val payment = insertPaymentData(mockPayment())
-        saveOrder(customer, product, payment)
+        saveOrder(customerId = customer.id, paymentId = payment.id)
 
         val orders = restTemplate.exchange<List<OrderResponse>>(
             url = "/orders?cpf={cpf}",
             method = HttpMethod.GET,
-            requestEntity = HttpEntity(null, authenticationHeader),
+            requestEntity = null,
             uriVariables = mapOf(
                 "cpf" to cpf,
             ),
@@ -114,8 +114,8 @@ class OrderEntityIT : BaseIntegrationTest() {
 
         assertAll(
             Executable { assertNotNull(order.id) },
-            Executable { order.customer?.let { assertEquals(cpf, it.cpf) } },
-            Executable { assertEquals(OrderStatus.NEW, order.status) },
+            Executable { assertEquals(customer.id, order.customerId!!) },
+            Executable { assertEquals(OrderStatus.RECEIVED, order.status) },
             Executable { assertFalse(order.items.isEmpty()) },
             Executable { assertEquals(5.99.toBigDecimal(), order.total) },
         )
@@ -124,18 +124,21 @@ class OrderEntityIT : BaseIntegrationTest() {
     @Test
     fun `should return BAD_REQUEST when trying to create an order for a customer that was not found`() {
         val cpf = "44527073001"
-        val items = insertProducts().map {
-            OrderCreationRequest.OrderItem(
-                productId = it.id!!,
-                quantity = 1,
+        val items =
+            listOf(
+                OrderCreationRequest.OrderItem(
+                    productId = UUID.randomUUID(),
+                    quantity = 1,
+                    price = BigDecimal.ONE,
+                ),
             )
-        }
+
         val inputOrderData = OrderCreationRequest(customerCpf = cpf, items)
 
         val response = restTemplate.exchange<Any>(
             url = "/orders",
             method = HttpMethod.POST,
-            requestEntity = HttpEntity(inputOrderData, authenticationHeader),
+            requestEntity = HttpEntity(inputOrderData),
         )
 
         assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
@@ -145,19 +148,21 @@ class OrderEntityIT : BaseIntegrationTest() {
     fun `should create a new order when cpf is not filled in`() {
         val cpf = ""
         val customer = insertCustomerData(mockDomainCustomer(cpf = cpf))
-        val items = insertProducts().map {
-            OrderCreationRequest.OrderItem(
-                productId = it.id!!,
-                quantity = 1,
+        val items =
+            listOf(
+                OrderCreationRequest.OrderItem(
+                    productId = UUID.randomUUID(),
+                    quantity = 1,
+                    price = 5.99.toBigDecimal(),
+                ),
             )
-        }
 
         val inputOrderData = OrderCreationRequest(customerCpf = customer.cpf, items)
 
         val orderResponse = restTemplate.exchange<OrderResponse>(
             url = "/orders",
             method = HttpMethod.POST,
-            requestEntity = HttpEntity(inputOrderData, authenticationHeader),
+            requestEntity = HttpEntity(inputOrderData),
         )
 
         assertAll(
@@ -165,11 +170,11 @@ class OrderEntityIT : BaseIntegrationTest() {
             Executable { assertNotNull(orderResponse.body) },
         )
 
-        val order = orderDatabaseRepository.findById(orderResponse.body!!.id).getOrNull()
+        val order = orderDatabaseRepository.findById(orderResponse.body!!.id)
 
         assertAll(
             Executable { assertNotNull(order) },
-            Executable { order!!.customer?.let { assertEquals(cpf, it.cpf) } },
+            Executable { assertNull(order!!.customerId) },
             Executable { assertEquals(OrderStatus.RECEIVED.name, order!!.status) },
             Executable { assertFalse(order!!.items.isEmpty()) },
         )

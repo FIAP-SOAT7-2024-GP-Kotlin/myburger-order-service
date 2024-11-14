@@ -38,7 +38,7 @@ class PaymentUseCaseTest {
     @Test
     @Order(1)
     fun `should try to request QRCode successfully using an external service`() {
-        val order = mockOrder(mockDomainCustomer(cpf = "12312312312"))
+        val order = mockOrder(mockDomainCustomer(cpf = "12312312312").id)
 
         every { paymentIntegrationRepository.requestQRCodeDataForPayment(any<OrderModel>()) } returns mockQRCode(
             UUID.randomUUID().toString(),

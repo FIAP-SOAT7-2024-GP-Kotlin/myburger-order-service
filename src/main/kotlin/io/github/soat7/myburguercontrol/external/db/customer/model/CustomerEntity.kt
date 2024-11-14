@@ -6,10 +6,10 @@ import java.util.UUID
 
 @Document
 data class CustomerEntity(
-    var id: UUID? = null,
-    var cpf: String,
-    var name: String? = null,
-    var email: String? = null,
+    val id: UUID,
+    val cpf: String,
+    val name: String? = null,
+    val email: String? = null,
     val createdAt: Instant,
     val updatedAt: Instant?,
 )

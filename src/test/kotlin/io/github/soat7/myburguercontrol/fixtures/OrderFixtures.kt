@@ -1,57 +1,50 @@
 package io.github.soat7.myburguercontrol.fixtures
 
-import io.github.soat7.myburguercontrol.domain.entities.Customer
 import io.github.soat7.myburguercontrol.domain.entities.Order
 import io.github.soat7.myburguercontrol.domain.entities.OrderItem
-import io.github.soat7.myburguercontrol.domain.entities.Payment
 import io.github.soat7.myburguercontrol.domain.entities.enum.OrderStatus
-import io.github.soat7.myburguercontrol.external.db.customer.entity.CustomerEntity
 import io.github.soat7.myburguercontrol.external.db.order.model.OrderEntity
 import io.github.soat7.myburguercontrol.external.db.order.model.OrderItemEntity
-import io.github.soat7.myburguercontrol.external.db.payment.entity.PaymentEntity
-import io.github.soat7.myburguercontrol.external.db.product.entity.ProductEntity
-import io.github.soat7.myburguercontrol.fixtures.ProductFixtures.mockDomainProduct
 import java.time.Instant
 import java.util.UUID
 
 object OrderFixtures {
 
     fun mockOrder(
-        customer: Customer,
+        customerId: UUID,
+        paymentId: UUID = UUID.randomUUID(),
+        productId: UUID = UUID.randomUUID(),
     ) = Order(
         id = UUID.randomUUID(),
-        customer = customer,
-        payment = Payment(),
-    ).apply {
-        val productId = UUID.randomUUID()
-        this.items.map {
+        customerId = customerId,
+        paymentId = paymentId,
+        items = listOf(
             OrderItem(
-                id = productId,
-                product = mockDomainProduct(description = "Product $productId"),
+                productId = productId,
                 quantity = 1,
-            )
-        }
-    }
+                price = 5.99.toBigDecimal(),
+            ),
+        ),
+    )
 
     fun mockOrderEntity(
-        customerEntity: CustomerEntity,
-        product: ProductEntity,
-        paymentEntity: PaymentEntity,
+        customerId: UUID,
+        productId: UUID,
+        paymentId: UUID,
         status: String? = null,
     ) = OrderEntity(
         id = UUID.randomUUID(),
-        customer = customerEntity,
-        status = status ?: OrderStatus.NEW.name,
+        customerId = customerId,
+        status = status ?: OrderStatus.RECEIVED.name,
         createdAt = Instant.now(),
-        payment = paymentEntity,
-    ).apply {
-        this.items = listOf(
+        paymentId = paymentId,
+        items = listOf(
             OrderItemEntity(
-                id = UUID.randomUUID(),
-                this,
-                productId = product,
+                productId = productId,
                 quantity = 1,
+                price = 5.99.toBigDecimal(),
             ),
-        )
-    }
+        ),
+        updatedAt = Instant.now(),
+    )
 }

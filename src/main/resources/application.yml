@@ -71,15 +71,3 @@ logging:
   level:
     org.springframework.web: ${LOG_LEVEL:DEBUG}
     io.github.soat7.myburguercontrol: ${LOG_LEVEL:DEBUG}
-
-jwt:
-  key: ${JWT_KEY}
-  access-token-expiration: 3600000
-  refresh-token-expiration: 86400000
-
-mercadopago:
-  paymentURL: ${MP_PAYMENT_URL}
-  merchantURL: ${MP_MERCHANT_URL}
-  accessToken: ${MP_ACCESS_TOKEN}
-  webhookKey: ${MP_WEBHOOK_KEY}
-  notificationUrl: ${MP_NOTIFICATION_URL}

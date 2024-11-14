@@ -28,9 +28,10 @@ class OrderDatabaseRepository(
     fun findByCustomerId(customerId: UUID): List<OrderEntity> {
         return mongoDbTemplate.find(
             Query(
-                Criteria.where("customer_id").`is`(customerId),
+                Criteria.where("customerId").`is`(customerId),
             ),
             OrderEntity::class.java,
+            collection,
         )
     }
 
@@ -58,9 +59,32 @@ class OrderDatabaseRepository(
     }
 
     fun findAll(pageable: Pageable): Page<OrderEntity> {
-        val query = Query().with(pageable)
-        val orders = mongoDbTemplate.find(query, OrderEntity::class.java)
-        val total = mongoDbTemplate.count(query, OrderEntity::class.java)
+        val query = Query(
+            Criteria.where("status").ne("FINISHED"),
+        ).with(pageable)
+
+        query
+            .with(
+                Sort.by(
+                    Sort.Order(Sort.Direction.ASC, "createdAt"),
+                ),
+            )
+
+        val orders = mongoDbTemplate.find(query, OrderEntity::class.java, collection)
+            .sortedWith(
+                compareBy(
+                    {
+                        when (it.status) {
+                            "READY" -> 1
+                            "IN_PROGRESS" -> 2
+                            "RECEIVED" -> 3
+                            else -> 4
+                        }
+                    },
+                    { it.createdAt },
+                ),
+            )
+        val total = mongoDbTemplate.count(query, OrderEntity::class.java, collection)
         return PageImpl(orders, pageable, total)
     }
 }

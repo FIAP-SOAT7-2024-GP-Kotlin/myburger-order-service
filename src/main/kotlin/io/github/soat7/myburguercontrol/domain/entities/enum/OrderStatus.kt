@@ -5,7 +5,6 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 private val logger = KotlinLogging.logger {}
 
 enum class OrderStatus {
-    NEW,
     RECEIVED,
     IN_PROGRESS,
     READY,
