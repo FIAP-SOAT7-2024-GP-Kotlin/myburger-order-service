@@ -24,6 +24,18 @@ jobs:
         build-scan-publish: true
         build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
         build-scan-terms-of-use-agree: "yes"
+        
+    - name: Set repository name as environment variable
+      env:
+        REPO_NAME: ${{ github.event.repository.name }}
+      run: |
+        echo "Repository Name: $REPO_NAME"
+        # Aqui você pode usar a variável REPO_NAME no seu script
+
+    - name: Extract repository name manually (optional)
+      run: |
+        REPO_NAME=$(basename ${{ github.repository }})
+        echo "Repository Name (manual extraction): $REPO_NAME"
 
     - name: Run build [MyBurguer - Order Service]
       run: ./gradlew clean build --no-daemon -x test
