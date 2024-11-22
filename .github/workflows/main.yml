@@ -38,9 +38,9 @@ jobs:
     # - name: Generate JaCoCo Test Coverage Report [MyBurguer - Order Service]
     #   run: ./gradlew jacocoTestReport
 
-    # - name: Get current date [MyBurguer - Order Service]
-    #   id: date
-    #   run: echo "::set-output name=date::$(date +'%Y%m%d')"
+    - name: Get current date ${{ env.TITLE_STEP }}
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y%m%d')"
 
     # - name: Check Test Coverage [MyBurguer - Order Service]
     #   run: |
