@@ -135,15 +135,25 @@ tasks.withType<Test> {
 }
 
 tasks.jacocoTestReport {
-   reports {
-        xml.required.set(true) // Define o XML como obrigatório
-        csv.required.set(false) // Desabilita o CSV, se não for necessário
-        json.required.set(true) // Define o JSON como obrigatório
-
-        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/test/html"))
-        json.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/test/json"))
+    reports {
+        xml.required.set(true) // Gera o relatório XML
+        html.required.set(false) // Desativa o HTML (se não for necessário)
+        csv.required.set(false) // Desativa o CSV (se não for necessário)
     }
-    dependsOn(tasks.test)
+    dependsOn(tasks.test) // Garante que os testes sejam executados antes do relatório
+}
+
+tasks.register<Exec>("generateJsonSummary") {
+    dependsOn(tasks.jacocoTestReport) // Só executa após o jacocoTestReport
+    commandLine("bash", "-c", """
+        xmlstarlet sel -t \
+        -m "/report/counter[@type='INSTRUCTION']" \
+        -v "@covered" -o "," -v "@missed" \
+        -n build/reports/jacoco/test/jacoco.xml | \
+        awk -F',' '{
+            printf "{ \"covered\": %d, \"missed\": %d }\n", $1, $2
+        }' > build/reports/jacoco/test-summary.json
+    """)
 }
 
 tasks.jacocoTestCoverageVerification {
