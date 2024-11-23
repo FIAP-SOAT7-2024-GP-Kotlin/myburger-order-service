@@ -48,6 +48,7 @@ jobs:
       run: |
         echo "Test Coverage Report:"
         cat build/reports/jacoco/test/html/index.html
+        ls -la build/reports/jacoco/test/
 
     - name: Upload JaCoCo Test Coverage Report to Artifacts ${{ env.TITLE_STEP }}
       uses: actions/upload-artifact@v4
