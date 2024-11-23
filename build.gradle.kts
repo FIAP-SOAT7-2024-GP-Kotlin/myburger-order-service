@@ -138,7 +138,9 @@ tasks.jacocoTestReport {
     reports {
         xml.required = true
         csv.required = true
-        html.outputLocation = layout.buildDirectory.dir("reports/jacoco/test/html")
+        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/test/html"))
+        xml.outputLocation.set(layout.buildDirectory.file("reports/jacoco/test/jacoco.xml"))
+        csv.outputLocation.set(layout.buildDirectory.file("reports/jacoco/test/jacoco.csv"))
         classDirectories.setFrom(
             files(
                 classDirectories.files.map {
