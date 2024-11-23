@@ -136,11 +136,15 @@ tasks.withType<Test> {
 
 tasks.jacocoTestReport {
     reports {
-        xml.required = true
-        csv.required = true
-        html.outputLocation = layout.buildDirectory.dir("reports/jacoco/test/html")
+        xml.required.set(true) // Gera o relatório XML
+        html.required.set(true) // Gera o relatório HTML
+        csv.required.set(true) // Desativa o CSV (se não for necessário)
+
+        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/test/html"))
+        xml.outputLocation.set(layout.buildDirectory.file("reports/jacoco/test/jacoco.xml"))
+        csv.outputLocation.set(layout.buildDirectory.file("reports/jacoco/test/jacoco.csv"))
     }
-    dependsOn(tasks.test)
+    dependsOn(tasks.test) // Garante que os testes sejam executados antes do relatório
 }
 
 tasks.jacocoTestCoverageVerification {
