@@ -2,6 +2,7 @@
 
 [![cov](https://FIAP-SOAT7-2024-GP-Kotlin.github.io/myburger-order-service/badges/coverage.svg)](https://github.com/FIAP-SOAT7-2024-GP-Kotlin/myburger-order-service/actions)
 
+![Coverage](.github/badges/jacoco.svg)
 # My Burguer Control - 7SOAT
 ___
 
