@@ -14,18 +14,19 @@ import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClientResponseException
 import org.springframework.web.client.RestTemplate
+import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 
 @Component
 class PaymentIntegrationClient(
-    @Value("\${third-party.payment-service.url}") private val paymentServiceUrl: String,
+    @Value("\${third-party.payment-integration.url}") private val paymentServiceUrl: String,
     @Qualifier("paymentRestTemplate") private val paymentRestTemplate: RestTemplate,
 ) : PaymentIntegrationRepository {
 
-    override fun requestQRCodeDataForPayment(order: Order): QRCodeData {
+    override fun requestPayment(order: Order, paymentId: UUID): QRCodeData {
         try {
-            val orderToRequest = order.toPaymentRequest()
+            val orderToRequest = order.toPaymentRequest(paymentId)
 
             logger.info { "Requesting PaymentData with [payload: $orderToRequest]" }
 
@@ -46,7 +47,8 @@ class PaymentIntegrationClient(
                 throw ReasonCodeException(ReasonCode.UNEXPECTED_ERROR)
             }
         } catch (ex: RestClientResponseException) {
-            logger.warn { "Integration error" }.also { throw ex }
+            logger.warn { "Integration error" }
+            throw ex
         }
     }
 }

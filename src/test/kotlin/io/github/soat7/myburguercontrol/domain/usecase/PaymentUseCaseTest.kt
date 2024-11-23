@@ -39,18 +39,14 @@ class PaymentUseCaseTest {
     @Order(1)
     fun `should try to request QRCode successfully using an external service`() {
         val order = mockOrder(mockDomainCustomer(cpf = "12312312312").id)
-
-        every { paymentIntegrationRepository.requestQRCodeDataForPayment(any<OrderModel>()) } returns mockQRCode(
+        val payment = mockPayment()
+        every { paymentIntegrationRepository.requestPayment(any<OrderModel>(), any()) } returns mockQRCode(
             UUID.randomUUID().toString(),
         )
-        every { orderGateway.findById(any()) } returns order
-        every { orderGateway.update(any()) } returns order
-        every { paymentGateway.findById(any()) } returns mockPayment()
-        every { paymentGateway.create(any()) } returns mockPayment()
-        every { paymentGateway.update(any()) } returns mockPayment()
+        every { paymentGateway.create(any()) } returns payment
 
         val response = assertDoesNotThrow {
-            service.startPaymentRequest(order.id)
+            service.sendPaymentRequest(order)
         }
 
         assertNotNull(response)

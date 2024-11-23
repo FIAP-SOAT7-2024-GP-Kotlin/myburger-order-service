@@ -29,8 +29,8 @@ object OrderFixtures {
 
     fun mockOrderEntity(
         customerId: UUID,
-        productId: UUID,
-        paymentId: UUID,
+        productId: UUID = UUID.randomUUID(),
+        paymentId: UUID = UUID.randomUUID(),
         status: String? = null,
     ) = OrderEntity(
         id = UUID.randomUUID(),

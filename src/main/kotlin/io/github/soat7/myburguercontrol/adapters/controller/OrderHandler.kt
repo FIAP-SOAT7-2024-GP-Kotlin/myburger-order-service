@@ -38,4 +38,8 @@ class OrderHandler(
 
     fun changeOrderStatus(status: OrderStatus, orderId: UUID) =
         orderUseCase.changeOrderStatus(status, orderId).toResponse()
+
+    fun sendOrderPayment(orderId: UUID) {
+        orderUseCase.sendOrderPayment(orderId = orderId)
+    }
 }
