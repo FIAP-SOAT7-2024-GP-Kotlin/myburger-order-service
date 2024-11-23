@@ -53,6 +53,7 @@ jobs:
         path: build/reports/jacoco/test/html/
 
     - name: Generate JaCoCo Badge
+      id: jacoco
       uses: cicirello/jacoco-badge-generator@v2
       with:
         generate-branches-badge: true
@@ -63,18 +64,18 @@ jobs:
         echo "coverage = ${{ steps.jacoco.outputs.coverage }}"
         echo "branch coverage = ${{ steps.jacoco.outputs.branches }}"
 
-    - name: Authentication Docker Hub
-      uses: docker/login-action@v3.2.0
-      with:
-        username: ${{secrets.DOCKERHUB_USER}}
-        password: ${{secrets.DOCKERHUB_PWD}}
-
-    - name: Build the Docker image
-      uses: docker/build-push-action@v6.0.0
-      with:
-        context: ./
-        file: ./Dockerfile
-        push: true
-        tags: |
-          fiapmyburguer/${{ env.REPO_NAME }}:${{ steps.date.outputs.date }}
-          fiapmyburguer/${{ env.REPO_NAME }}:latest
+#    - name: Authentication Docker Hub
+#      uses: docker/login-action@v3.2.0
+#      with:
+#        username: ${{secrets.DOCKERHUB_USER}}
+#        password: ${{secrets.DOCKERHUB_PWD}}
+#
+#    - name: Build the Docker image
+#      uses: docker/build-push-action@v6.0.0
+#      with:
+#        context: ./
+#        file: ./Dockerfile
+#        push: true
+#        tags: |
+#          fiapmyburguer/${{ env.REPO_NAME }}:${{ steps.date.outputs.date }}
+#          fiapmyburguer/${{ env.REPO_NAME }}:latest
