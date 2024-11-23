@@ -1,4 +1,4 @@
-[![CI [MyBurguer ≡]](https://github.com/FIAP-SOAT7-2024-GP-Kotlin/myburgercontrol-clean-arch/actions/workflows/main.yml/badge.svg)](https://github.com/FIAP-SOAT7-2024-GP-Kotlin/myburgercontrol-clean-arch/actions/workflows/main.yml)
+![Coverage Badge](https://github.com/FIAP-SOAT7-2024-GP-Kotlin/myburger-order-service/actions/workflows/main.yml/badge.svg)
 
 # My Burguer Control - 7SOAT
 ___
