@@ -138,7 +138,9 @@ tasks.jacocoTestReport {
     reports {
         xml.required = true
         csv.required = true
+        json.required = true
         html.outputLocation = layout.buildDirectory.dir("reports/jacoco/test/html")
+        json.outputLocation = layout.buildDirectory.dir("reports/jacoco/test/json")
     }
     dependsOn(tasks.test)
 }
