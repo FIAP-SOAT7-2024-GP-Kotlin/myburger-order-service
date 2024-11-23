@@ -137,7 +137,7 @@ tasks.withType<Test> {
 tasks.jacocoTestReport {
    reports {
         xml.required.set(true) // Define o XML como obrigatório
-        csv.required.set(true) // Define o CSV como obrigatório
+        csv.required.set(false) // Desabilita o CSV, se não for necessário
         json.required.set(true) // Define o JSON como obrigatório
 
         html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/test/html"))
