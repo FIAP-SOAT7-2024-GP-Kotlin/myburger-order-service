@@ -32,22 +32,22 @@ jobs:
     - name: Run build ${{ env.TITLE_STEP }}
       run: ./gradlew clean build --no-daemon -x test
         
-    - name: Run tests $TITLE
+    - name: Run tests ${{ env.TITLE_STEP }}
       run: ./gradlew test --info --stacktrace
 
-    - name: Generate JaCoCo Test Coverage Report [MyBurguer - Order Service]
+    - name: Generate JaCoCo Test Coverage Report ${{ env.TITLE_STEP }}
       run: ./gradlew jacocoTestReport
 
     - name: Get current date ${{ env.TITLE_STEP }}
       id: date
       run: echo "::set-output name=date::$(date +'%Y%m%d')"
 
-    - name: Check Test Coverage [MyBurguer - Order Service]
+    - name: Check Test Coverage ${{ env.TITLE_STEP }}
       run: |
         echo "Test Coverage Report:"
         cat build/reports/jacoco/test/html/index.html
 
-    - name: Upload JaCoCo Test Coverage Report to Artifacts [MyBurguer - Order Service]
+    - name: Upload JaCoCo Test Coverage Report to Artifacts ${{ env.TITLE_STEP }}
       uses: actions/upload-artifact@v3
       with:
         name: jacoco-report
