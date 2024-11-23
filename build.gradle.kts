@@ -158,7 +158,7 @@ tasks.register<Exec>("generateJsonSummary") {
         -n build/reports/jacoco/test/jacoco.xml | \
         awk -F',' '{
             printf "{ \"covered\": %d, \"missed\": %d }\n", $1, $2
-        }' > build/reports/jacoco/test-summary.json
+        }' > build/reports/jacoco/test/test-summary.json
     """,
     )
 }
