@@ -145,7 +145,10 @@ tasks.jacocoTestReport {
 
 tasks.register<Exec>("generateJsonSummary") {
     dependsOn(tasks.jacocoTestReport) // Só executa após o jacocoTestReport
-    commandLine("bash", "-c", """
+    commandLine(
+        "bash",
+        "-c",
+        """
         xmlstarlet sel -t \
         -m "/report/counter[@type='INSTRUCTION']" \
         -v "@covered" -o "," -v "@missed" \
@@ -153,7 +156,8 @@ tasks.register<Exec>("generateJsonSummary") {
         awk -F',' '{
             printf "{ \"covered\": %d, \"missed\": %d }\n", $1, $2
         }' > build/reports/jacoco/test-summary.json
-    """)
+    """,
+    )
 }
 
 tasks.jacocoTestCoverageVerification {
