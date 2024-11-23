@@ -55,8 +55,8 @@ jobs:
         name: jacoco-report
         path: build/reports/jacoco/test/html/
 
-    - name: Coverage Badge
-      uses: we-cli/coverage-badge-action@v1.0.1 
+    - name: Create Coverage Badges
+      uses: jaywcjlove/coverage-badges-cli@v2.1.0
       with:
         source: build/reports/jacoco/test-json-summary.json
 
