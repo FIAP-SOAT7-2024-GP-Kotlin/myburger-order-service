@@ -93,6 +93,12 @@ class OrderController(
         )
     }
 
+    @PostMapping("/payment", consumes = [MediaType.APPLICATION_JSON_VALUE])
+    fun sendPayment(@RequestBody orderId: UUID): ResponseEntity<Void> {
+        orderHandler.sendOrderPayment(orderId)
+        return ResponseEntity.noContent().build()
+    }
+
     @PostMapping("/received", consumes = [MediaType.APPLICATION_JSON_VALUE])
     @Operation(
         tags = ["2 - Jornada do Pedido"],

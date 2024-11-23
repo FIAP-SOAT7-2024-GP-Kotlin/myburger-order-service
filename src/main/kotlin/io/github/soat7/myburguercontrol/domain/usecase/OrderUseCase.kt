@@ -17,6 +17,7 @@ private val logger = KotlinLogging.logger {}
 class OrderUseCase(
     private val orderGateway: OrderGateway,
     private val customerUseCase: CustomerUseCase,
+    private val paymentUseCase: PaymentUseCase,
 ) {
 
     fun createOrder(orderDetail: OrderDetail): Order {
@@ -32,7 +33,7 @@ class OrderUseCase(
                 id = UUID.randomUUID(),
                 customerId = customer?.id,
                 items = buildOrderItems(orderDetail),
-                status = OrderStatus.RECEIVED,
+                status = OrderStatus.PENDING_PAYMENT,
             ),
         )
     }
@@ -60,6 +61,22 @@ class OrderUseCase(
         return orderGateway.findById(orderId)
             ?.let { orderGateway.update(it.copy(status = status)) }
             ?: throw ReasonCodeException(ReasonCode.ORDER_NOT_FOUND)
+    }
+
+    fun sendOrderPayment(orderId: UUID): Order {
+        logger.info { "Sending order payment" }
+
+        val order = orderGateway.findById(orderId)
+            ?: throw ReasonCodeException(ReasonCode.ORDER_NOT_FOUND)
+
+        val payment = paymentUseCase.sendPaymentRequest(order)
+
+        return orderGateway.update(
+            order.copy(
+                paymentId = payment.id,
+                status = OrderStatus.RECEIVED,
+            ),
+        )
     }
 
     private fun buildOrderItems(orderDetail: OrderDetail): List<OrderItem> {

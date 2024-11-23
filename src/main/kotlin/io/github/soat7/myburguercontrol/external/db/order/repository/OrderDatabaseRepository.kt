@@ -42,8 +42,8 @@ class OrderDatabaseRepository(
             query.with(Sort.by(Sort.Direction.ASC, "createdAt"))
         }
 
-        val orders = mongoDbTemplate.find(query, OrderEntity::class.java)
-        val total = mongoDbTemplate.count(query, OrderEntity::class.java)
+        val orders = mongoDbTemplate.find(query, OrderEntity::class.java, collection)
+        val total = mongoDbTemplate.count(query, OrderEntity::class.java, collection)
         return PageImpl(orders, pageable, total)
     }
 

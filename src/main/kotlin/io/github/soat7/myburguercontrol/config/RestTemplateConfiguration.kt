@@ -12,19 +12,8 @@ class RestTemplateConfiguration {
 
     @Bean
     fun paymentRestTemplate(
-        @Value("\${third-party.payment-service.connectionTimeout}") connectTimeout: Long,
-        @Value("\${third-party.payment-service.readTimeout}") readTimeout: Long,
-    ): RestTemplate {
-        return RestTemplateBuilder()
-            .setConnectTimeout(Duration.ofMillis(connectTimeout))
-            .setReadTimeout(Duration.ofMillis(readTimeout))
-            .build()
-    }
-
-    @Bean
-    fun managementRestTemplate(
-        @Value("\${third-party.management-service.connectionTimeout}") connectTimeout: Long,
-        @Value("\${third-party.management-service.readTimeout}") readTimeout: Long,
+        @Value("\${third-party.payment-integration.connectionTimeout}") connectTimeout: Long,
+        @Value("\${third-party.payment-integration.readTimeout}") readTimeout: Long,
     ): RestTemplate {
         return RestTemplateBuilder()
             .setConnectTimeout(Duration.ofMillis(connectTimeout))

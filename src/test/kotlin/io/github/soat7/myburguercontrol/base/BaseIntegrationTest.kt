@@ -12,7 +12,6 @@ import io.github.soat7.myburguercontrol.external.db.customer.repository.Customer
 import io.github.soat7.myburguercontrol.external.db.order.model.OrderEntity
 import io.github.soat7.myburguercontrol.external.db.order.repository.OrderDatabaseRepository
 import io.github.soat7.myburguercontrol.external.db.payment.repository.PaymentDatabaseRepository
-import io.github.soat7.myburguercontrol.fixtures.OrderFixtures
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,7 +20,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.test.context.ActiveProfiles
-import java.util.UUID
 
 @ActiveProfiles("test")
 @SpringBootTest(
@@ -65,12 +63,5 @@ class BaseIntegrationTest {
 
     protected fun insertPaymentData(payment: Payment) = paymentDatabaseRepository.create(payment.toPersistence())
 
-    protected fun saveOrder(
-        customerId: UUID,
-        productId: UUID = UUID.randomUUID(),
-        paymentId: UUID,
-        status: String? = null,
-    ): OrderEntity {
-        return orderDatabaseRepository.create(OrderFixtures.mockOrderEntity(customerId, productId, paymentId, status))
-    }
+    protected fun saveOrder(order: OrderEntity): OrderEntity = orderDatabaseRepository.create(order)
 }
