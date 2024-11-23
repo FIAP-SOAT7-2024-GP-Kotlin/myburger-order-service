@@ -135,12 +135,13 @@ tasks.withType<Test> {
 }
 
 tasks.jacocoTestReport {
-    reports {
-        xml.required = true
-        csv.required = true
-        json.required = true
-        html.outputLocation = layout.buildDirectory.dir("reports/jacoco/test/html")
-        json.outputLocation = layout.buildDirectory.dir("reports/jacoco/test/json")
+   reports {
+        xml.required.set(true) // Define o XML como obrigatório
+        csv.required.set(true) // Define o CSV como obrigatório
+        json.required.set(true) // Define o JSON como obrigatório
+
+        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/test/html"))
+        json.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/test/json"))
     }
     dependsOn(tasks.test)
 }
