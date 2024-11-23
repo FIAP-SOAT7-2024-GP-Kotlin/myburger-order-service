@@ -59,7 +59,7 @@ jobs:
     - name: Create Coverage Badges
       uses: jaywcjlove/coverage-badges-cli@v2.1.0
       with:
-        source: build/reports/jacoco/test/test-json-summary.json
+        source: build/reports/jacoco/test/json/test-json-summary.json
 
     - name: Authentication Docker Hub ${{ env.TITLE_STEP }}
       uses: docker/login-action@v3.2.0
