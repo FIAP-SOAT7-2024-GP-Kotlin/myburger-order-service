@@ -48,11 +48,7 @@ spring:
     property-naming-strategy: SNAKE_CASE
 
 third-party:
-  management-service:
-    url: ${MANAGEMENT_SERVICE_URL}
-    connectionTimeout: 5000
-    readTimeout: 5000
-  payment-service:
+  payment-integration:
     url: ${PAYMENT_SERVICE_URL}
     connectionTimeout: 5000
     readTimeout: 5000
