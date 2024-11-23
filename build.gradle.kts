@@ -139,6 +139,9 @@ tasks.jacocoTestReport {
         xml.required.set(true) // Gera o relatório XML
         html.required.set(true) // Gera o relatório HTML
         csv.required.set(false) // Desativa o CSV (se não for necessário)
+
+        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/test/html"))
+        xml.outputLocation.set(layout.buildDirectory.file("reports/jacoco/test/jacoco.xml"))
     }
     dependsOn(tasks.test) // Garante que os testes sejam executados antes do relatório
 }
