@@ -14,9 +14,6 @@ jobs:
     - name: Checkout sources
       uses: actions/checkout@v4
 
-    - name: Set title
-      run: echo "TITLE_STEP=[MyBurguer - Order Service]" >> $GITHUB_ENV
-
     - name: Setup Java
       uses: actions/setup-java@v4
       with:
@@ -24,50 +21,50 @@ jobs:
         java-version: 21
         cache: 'gradle'
 
-    - name: Setup Gradle ${{ env.TITLE_STEP }}
+    - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
       with:
         build-scan-publish: true
         build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
         build-scan-terms-of-use-agree: "yes"
 
-    - name: Run build ${{ env.TITLE_STEP }}
+    - name: Run build
       run: ./gradlew clean build --no-daemon -x test
 
-    - name: Run tests ${{ env.TITLE_STEP }}
+    - name: Run tests
       run: ./gradlew test --info --stacktrace
 
-    - name: Generate JaCoCo Test Coverage Report ${{ env.TITLE_STEP }}
+    - name: Generate JaCoCo Test Coverage Report
       run: ./gradlew jacocoTestReport
 
-    - name: Get current date ${{ env.TITLE_STEP }}
+    - name: Get current date
       id: date
       run: echo "::set-output name=date::$(date +'%Y%m%d')"
 
-    - name: Check Test Coverage ${{ env.TITLE_STEP }}
+    - name: Check Test Coverage
       run: |
         echo "Test Coverage Report:"
-        cat build/reports/jacoco/test/html/index.html
         ls -la build/reports/jacoco/test
 
-    - name: Upload JaCoCo Test Coverage Report to Artifacts ${{ env.TITLE_STEP }}
+    - name: Upload JaCoCo Test Coverage Report to Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: jacoco-report
         path: build/reports/jacoco/test/html/
 
-    - name: Create Coverage Badges
-      uses: jaywcjlove/coverage-badges-cli@v2.1.0
+    - name: Generate JaCoCo Badge
+      uses: cicirello/jacoco-badge-generator@v2
       with:
-        source: build/reports/jacoco/test/test-summary.json
+        generate-branches-badge: true
+        jacoco-csv-file: build/reports/jacoco/test/jacoco.csv
 
-    - name: Authentication Docker Hub ${{ env.TITLE_STEP }}
+    - name: Authentication Docker Hub
       uses: docker/login-action@v3.2.0
       with:
         username: ${{secrets.DOCKERHUB_USER}}
         password: ${{secrets.DOCKERHUB_PWD}}
 
-    - name: Build the Docker image ${{ env.TITLE_STEP }}
+    - name: Build the Docker image
       uses: docker/build-push-action@v6.0.0
       with:
         context: ./
