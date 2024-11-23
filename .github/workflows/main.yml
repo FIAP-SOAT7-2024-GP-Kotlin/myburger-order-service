@@ -72,18 +72,18 @@ jobs:
         message: 'commit badge'
         add: '*.svg'
 
-#    - name: Authentication Docker Hub
-#      uses: docker/login-action@v3.2.0
-#      with:
-#        username: ${{secrets.DOCKERHUB_USER}}
-#        password: ${{secrets.DOCKERHUB_PWD}}
-#
-#    - name: Build the Docker image
-#      uses: docker/build-push-action@v6.0.0
-#      with:
-#        context: ./
-#        file: ./Dockerfile
-#        push: true
-#        tags: |
-#          fiapmyburguer/${{ env.REPO_NAME }}:${{ steps.date.outputs.date }}
-#          fiapmyburguer/${{ env.REPO_NAME }}:latest
+    - name: Authentication Docker Hub
+      uses: docker/login-action@v3.2.0
+      with:
+        username: ${{secrets.DOCKERHUB_USER}}
+        password: ${{secrets.DOCKERHUB_PWD}}
+
+    - name: Build the Docker image
+      uses: docker/build-push-action@v6.0.0
+      with:
+        context: ./
+        file: ./Dockerfile
+        push: true
+        tags: |
+          fiapmyburguer/${{ env.REPO_NAME }}:${{ steps.date.outputs.date }}
+          fiapmyburguer/${{ env.REPO_NAME }}:latest
