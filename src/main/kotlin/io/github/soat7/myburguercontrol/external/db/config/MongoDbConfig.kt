@@ -2,7 +2,6 @@ package io.github.soat7.myburguercontrol.external.db.config
 
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
-import com.mongodb.MongoCredential
 import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoClients
 import org.bson.UuidRepresentation
@@ -28,13 +27,6 @@ class MongoDbConfig(
 
     private fun buildMongoClientSettings(): MongoClientSettings {
         return MongoClientSettings.builder()
-            .credential(
-                MongoCredential.createScramSha256Credential(
-                    mongoProperties.username,
-                    mongoProperties.database,
-                    mongoProperties.password.toTypedArray().toCharArray(),
-                ),
-            )
             .applyConnectionString(ConnectionString(mongoProperties.uri))
             .uuidRepresentation(UuidRepresentation.STANDARD)
             .build()
