@@ -29,7 +29,7 @@ class MongoDbConfig(
     private fun buildMongoClientSettings(): MongoClientSettings {
         return MongoClientSettings.builder()
             .credential(
-                MongoCredential.createCredential(
+                MongoCredential.createScramSha256Credential(
                     mongoProperties.username,
                     mongoProperties.database,
                     mongoProperties.password.toTypedArray().toCharArray(),
