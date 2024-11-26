@@ -1,6 +1,6 @@
 [![CI [MyBurguer - Order Service]](https://github.com/FIAP-SOAT7-2024-GP-Kotlin/myburger-order-service/actions/workflows/main.yml/badge.svg)](https://github.com/FIAP-SOAT7-2024-GP-Kotlin/myburger-order-service/actions/workflows/main.yml)
 
-[![Coverage](.github/badges/jacoco.svg)](https://github.com/FIAP-SOAT7-2024-GP-Kotlin/myburger-order-service/actions/workflows/main.yml)
+[![Coverage](.github/badges/jacoco.svg)](https://github.com/FIAP-SOAT7-2024-GP-Kotlin/myburger-payment-service/actions/workflows/main.yml)
 # My Burguer Control - 7SOAT
 ___
 
