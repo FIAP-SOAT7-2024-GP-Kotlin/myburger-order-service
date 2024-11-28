@@ -1,15 +1,12 @@
 package io.github.soat7.myburguercontrol.domain.usecase
 
 import io.github.soat7.myburguercontrol.adapters.gateway.PaymentIntegrationRepository
-import io.github.soat7.myburguercontrol.external.db.order.OrderGateway
-import io.github.soat7.myburguercontrol.external.db.payment.PaymentGateway
-import io.github.soat7.myburguercontrol.fixtures.CustomerFixtures.mockDomainCustomer
 import io.github.soat7.myburguercontrol.fixtures.OrderFixtures.mockOrder
-import io.github.soat7.myburguercontrol.fixtures.PaymentFixtures.mockPayment
-import io.github.soat7.myburguercontrol.fixtures.PaymentFixtures.mockQRCode
 import io.mockk.clearMocks
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.TestInstance
@@ -26,9 +23,7 @@ import io.github.soat7.myburguercontrol.domain.entities.Order as OrderModel
 class PaymentUseCaseTest {
 
     private val paymentIntegrationRepository = mockk<PaymentIntegrationRepository>()
-    private val paymentGateway = mockk<PaymentGateway>()
-    private val orderGateway = mockk<OrderGateway>()
-    private val service = PaymentUseCase(paymentIntegrationRepository, paymentGateway, orderGateway)
+    private val service = PaymentUseCase(paymentIntegrationRepository)
 
     @BeforeTest
     fun setUp() {
@@ -37,16 +32,13 @@ class PaymentUseCaseTest {
 
     @Test
     @Order(1)
-    fun `should try to request QRCode successfully using an external service`() {
-        val order = mockOrder(mockDomainCustomer(cpf = "12312312312").id)
-        val payment = mockPayment()
-        every { paymentIntegrationRepository.requestPayment(any<OrderModel>(), any()) } returns mockQRCode(
-            UUID.randomUUID().toString(),
-        )
-        every { paymentGateway.create(any()) } returns payment
+    fun `should try to request payment successfully using an external service`() {
+        val order = mockOrder()
+        val paymentId = UUID.randomUUID()
+        every { paymentIntegrationRepository.requestPayment(any<OrderModel>(), any()) } just runs
 
         val response = assertDoesNotThrow {
-            service.sendPaymentRequest(order)
+            service.sendPaymentRequest(order, paymentId)
         }
 
         assertNotNull(response)

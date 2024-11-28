@@ -2,7 +2,7 @@ package io.github.soat7.myburguercontrol.fixtures
 
 import io.github.soat7.myburguercontrol.domain.entities.Payment
 import io.github.soat7.myburguercontrol.domain.entities.enum.PaymentStatus
-import io.github.soat7.myburguercontrol.external.thirdparty.payment.api.QRCodeData
+import io.github.soat7.myburguercontrol.external.thirdparty.payment.api.PaymentResponse
 import java.util.UUID
 
 object PaymentFixtures {
@@ -14,5 +14,5 @@ object PaymentFixtures {
         )
     }
 
-    fun mockQRCode(orderId: String) = QRCodeData("QRCodeData", orderId)
+    fun mockQRCode(orderId: String) = PaymentResponse("Solicitação recebida")
 }

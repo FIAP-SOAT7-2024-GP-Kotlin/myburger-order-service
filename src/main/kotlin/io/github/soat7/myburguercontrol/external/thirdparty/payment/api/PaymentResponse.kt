@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
-data class QRCodeData(
-    val qrData: String,
-    val inStoreOrderId: String,
+data class PaymentResponse(
+    val message: String,
 )

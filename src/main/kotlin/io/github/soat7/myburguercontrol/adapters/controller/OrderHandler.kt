@@ -6,6 +6,7 @@ import io.github.soat7.myburguercontrol.domain.entities.enum.OrderStatus
 import io.github.soat7.myburguercontrol.domain.usecase.OrderUseCase
 import io.github.soat7.myburguercontrol.external.webservice.common.PaginatedResponse
 import io.github.soat7.myburguercontrol.external.webservice.order.api.OrderCreationRequest
+import io.github.soat7.myburguercontrol.external.webservice.order.api.OrderResponse
 import org.springframework.data.domain.PageRequest
 import java.util.UUID
 
@@ -16,8 +17,8 @@ class OrderHandler(
     fun create(request: OrderCreationRequest) =
         orderUseCase.createOrder(request.toOrderDetails()).toResponse()
 
-    fun findOrdersByCustomerCpf(cpf: String) =
-        orderUseCase.findOrdersByCustomerCpf(cpf)
+    fun findOrdersByCustomerId(customerId: UUID): List<OrderResponse> =
+        orderUseCase.findOrdersByCustomerId(customerId)
             .map { it.toResponse() }
 
     fun findOrderQueue(page: Int, size: Int) = run {
