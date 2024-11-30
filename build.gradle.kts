@@ -6,6 +6,7 @@ import java.util.Properties
 // from gradle.properties
 val testContainerVersion: String by ext
 val javaVersion = JavaVersion.VERSION_21
+val sonarVersion: String by ext
 
 val props = Properties()
 try {
@@ -26,6 +27,7 @@ plugins {
     id("org.liquibase.gradle") version "2.2.2"
     id("org.barfuin.gradle.jacocolog") version "3.1.0"
     id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
+    id("org.sonarqube") version "4.0.0.2929"
 }
 
 group = "io.github.soat7"
