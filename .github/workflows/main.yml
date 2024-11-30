@@ -75,7 +75,7 @@ jobs:
     - name: Run SonarQube Analysis
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: ./gradlew
+      run: ./gradlew \
         -Dsonar.projectKey=FIAP-SOAT7-2024-GP-Kotlin_myburger-order-service \
         -Dsonar.host.url=https://sonarcloud.io \
         -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
