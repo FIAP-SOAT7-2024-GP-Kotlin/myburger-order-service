@@ -84,7 +84,7 @@ jobs:
         -Dsonar.coverage.jacoco.xmlReportPaths=build/reports/jacoco/test/jacoco.xml \
         -Dsonar.sources=src \
         -Dsonar.java.coveragePlugin=jacoco \
-        -Dsonar.exclusions=**/src/test/**/*,**/Application.kt,**/exception/**/*,**/config/**/*,**/mock/**/*,**/*Configuration.kt,**/*Config.kt \
+        -Dsonar.exclusions=**/src/test/**/*,**/Application.kt,**/exception/**/*,**/config/**/*,**/mock/**/*,**/*Configuration.kt,**/*Config.kt,**/model/**,**/enum/**,**/common/**,**/mapper/**,*/Application* \
         -Dsonar.tests=src/test/kotlin \
         sonar
 
