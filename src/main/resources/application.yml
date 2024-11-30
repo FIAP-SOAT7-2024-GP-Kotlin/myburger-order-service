@@ -47,11 +47,10 @@ spring:
       write_dates_as_timestamps: false
     property-naming-strategy: SNAKE_CASE
 
-third-party:
-  payment-integration:
-    url: ${PAYMENT_SERVICE_URL}
-    connectionTimeout: 5000
-    readTimeout: 5000
+payment-service:
+  url: ${PAYMENT_SERVICE_URL}
+  connectionTimeout: 5000
+  readTimeout: 5000
 
 springdoc:
   version: '@springdoc.version@'

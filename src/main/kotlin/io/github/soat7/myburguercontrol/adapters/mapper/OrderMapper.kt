@@ -15,7 +15,7 @@ import java.time.Instant
 import java.util.UUID
 
 fun OrderCreationRequest.toOrderDetails() = OrderDetail(
-    customerCpf = this.customerCpf,
+    customerId = this.customerId,
     items = this.items.map {
         OrderDetail.OrderItemDetail(
             productId = it.productId,

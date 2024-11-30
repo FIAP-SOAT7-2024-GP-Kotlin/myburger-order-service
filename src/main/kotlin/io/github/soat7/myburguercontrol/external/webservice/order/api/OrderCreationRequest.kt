@@ -8,7 +8,7 @@ import java.util.UUID
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
 data class OrderCreationRequest(
-    val customerCpf: String? = null,
+    val customerId: UUID,
     @NotEmpty(message = "one or more items must be provided")
     val items: List<OrderItem>,
 ) {

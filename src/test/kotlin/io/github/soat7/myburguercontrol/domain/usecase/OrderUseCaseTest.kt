@@ -3,14 +3,14 @@ package io.github.soat7.myburguercontrol.domain.usecase
 import io.github.soat7.myburguercontrol.domain.entities.enum.OrderStatus
 import io.github.soat7.myburguercontrol.exception.ReasonCodeException
 import io.github.soat7.myburguercontrol.external.db.order.OrderGateway
-import io.github.soat7.myburguercontrol.fixtures.CustomerFixtures.mockDomainCustomer
 import io.github.soat7.myburguercontrol.fixtures.OrderDetailFixtures
 import io.github.soat7.myburguercontrol.fixtures.OrderFixtures
-import io.github.soat7.myburguercontrol.fixtures.PaymentFixtures
 import io.github.soat7.myburguercontrol.util.toBigDecimal
 import io.mockk.clearAllMocks
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.MethodOrderer
@@ -35,9 +35,8 @@ import io.github.soat7.myburguercontrol.domain.entities.Order as OrderModel
 class OrderUseCaseTest {
 
     private val gateway = mockk<OrderGateway>()
-    private val customerUseCase = mockk<CustomerUseCase>()
     private val paymentUseCase = mockk<PaymentUseCase>()
-    private val service = OrderUseCase(gateway, customerUseCase, paymentUseCase)
+    private val service = OrderUseCase(gateway, paymentUseCase)
 
     @BeforeTest
     fun setUp() {
@@ -47,9 +46,7 @@ class OrderUseCaseTest {
     @Test
     @Order(1)
     fun `should create a new order using cpf`() {
-        val cpf = "23282711034"
-        val customer = mockDomainCustomer(cpf = cpf)
-        every { customerUseCase.findCustomerByCpf(cpf) } returns customer
+        val customerId = UUID.randomUUID()
         every { gateway.create(any<OrderModel>()) } answers {
             (this.firstArg() as OrderModel).copy(id = UUID.randomUUID())
         }
@@ -57,15 +54,13 @@ class OrderUseCaseTest {
             (this.firstArg() as OrderModel).copy(id = UUID.randomUUID())
         }
 
-        val order = service.createOrder(OrderDetailFixtures.mockOrderDetail(cpf = cpf))
+        val order = service.createOrder(OrderDetailFixtures.mockOrderDetail(customerId = customerId))
 
-        verify(exactly = 1) { customerUseCase.findCustomerByCpf(any()) }
         verify(exactly = 1) { gateway.create(any()) }
 
         Assertions.assertAll(
             Executable { assertNotNull(order.id) },
-            Executable { assertEquals(customer.id, order.customerId) },
-            Executable { assertEquals(OrderStatus.PENDING_PAYMENT, order.status) },
+            Executable { assertEquals(OrderStatus.RECEIVED, order.status) },
             Executable { assertFalse(order.items.isEmpty()) },
             Executable { assertEquals(5.99.toBigDecimal(), order.total) },
         )
@@ -135,16 +130,16 @@ class OrderUseCaseTest {
     fun `should successfully update an order after sending order payment`() {
         val customerId = UUID.randomUUID()
         val order = OrderFixtures.mockOrder(customerId)
-        val payment = PaymentFixtures.mockPayment()
+        val paymentId = UUID.randomUUID()
 
         every { gateway.findById(any()) } returns order
-        every { paymentUseCase.sendPaymentRequest(any()) } returns payment
-        every { gateway.update(any()) } returns order.copy(paymentId = payment.id, status = OrderStatus.RECEIVED)
+        every { paymentUseCase.sendPaymentRequest(any(), any()) } just runs
+        every { gateway.update(any()) } returns order.copy(paymentId = paymentId, status = OrderStatus.PENDING_PAYMENT)
 
         assertDoesNotThrow { service.sendOrderPayment(order.id) }
 
         verify(exactly = 1) { gateway.findById(any()) }
-        verify(exactly = 1) { paymentUseCase.sendPaymentRequest(any()) }
+        verify(exactly = 1) { paymentUseCase.sendPaymentRequest(any(), any()) }
         verify(exactly = 1) { gateway.update(any()) }
     }
 
@@ -158,7 +153,7 @@ class OrderUseCaseTest {
         }
 
         verify(exactly = 1) { gateway.findById(any()) }
-        verify(exactly = 0) { paymentUseCase.sendPaymentRequest(any()) }
+        verify(exactly = 0) { paymentUseCase.sendPaymentRequest(any(), any()) }
         verify(exactly = 0) { gateway.update(any()) }
     }
 }

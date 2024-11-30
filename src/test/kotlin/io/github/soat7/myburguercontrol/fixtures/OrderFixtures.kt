@@ -11,7 +11,7 @@ import java.util.UUID
 object OrderFixtures {
 
     fun mockOrder(
-        customerId: UUID,
+        customerId: UUID = UUID.randomUUID(),
         paymentId: UUID = UUID.randomUUID(),
         productId: UUID = UUID.randomUUID(),
     ) = Order(
