@@ -1,4 +1,4 @@
-name: CI [MyBurguer - Order Service]
+name: CI MyBurger - Order Service
 
 on: [push, pull_request]
 
