@@ -81,22 +81,8 @@ Neste momento a interface do Swagger estará disponível no endereço abaixo:
 Para facilitar o uso da aplicação, utilizamos as jornadas com o conjunto de endereços restritos as funcionalidades
 desejada na ordem de execução.
 
-#### Jornada de autenticação
-
-- **[POST]** | */users* | Utilize esta rota para criar um novo usuário.
-- **[GET]** | */users* Utilize esta rota para encontrar um usuário utilizando o cpf.
-- **[POST]** | */auth* | Utilize esta rota para autenticar um usuário já criado.
-- **[POST]** | */users/{id}* | Utilize esta rota para encontrar um usuário utilizando o identificador na base de dados.
-
-#### Jornada de Cliente
-
-- **[POST]** | */customers* | Utilize esta rota para criar um novo cliente.
-- **[GET]** | */customers* | Utilize esta rota para encontrar um cliente pelo CPF.
-
 #### Jornada de Pedido
 
-- **[GET]** | */products* | Utilize esta rota para buscar todos os produtos cadastrados.
-- **[GET]** | */products/type* | Utilize esta rota para buscar todos os produtos cadastrados por categoria.
 - **[POST]** | */orders* | Utilize esta rota para criar um pedido.
 - **[GET]** | */orders/queue* | Utilize esta rota para encontrar a lista do(s) novo(s) pedido(s).
 - **[GET]** | */orders* | Utilize esta rota para encontrar o(s) pedido(s) por cpf de cliente.
@@ -108,14 +94,6 @@ desejada na ordem de execução.
 #### Jornada de Pagamento
 - **[POST]** | */payment* | Utilize esta rota iniciar uma solicitação de QRCode para pagamento.
 
-
-#### Adminstrativo
-
-- **[POST]** | */products* | Utilize esta rota para cadastrar um novo produto.
-- **[GET]** | */products/{id}* | Utilize esta rota para encontrar um produto utilizando o identificador na base de
-  dados.
-- **[GET]** | */customer/{id}* | Utilize esta rota para encontrar um cliente utilizando o identificador na base de
-  dados.
 ___
 ## Liquibase
 

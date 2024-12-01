@@ -18,11 +18,11 @@ spring:
     enabled: true
     default-schema: ${spring.datasource.schema}
 
-third-party:
-  payment-integration:
-    url: ${mock-server.url}/payment-integration
-    connectionTimeout: 5000
-    readTimeout: 5000
+
+payment-service:
+  url: ${mock-server.url}/payment-integration
+  connectionTimeout: 5000
+  readTimeout: 5000
 
 mock-server:
   url: ${MOCK_SERVER_URL}
