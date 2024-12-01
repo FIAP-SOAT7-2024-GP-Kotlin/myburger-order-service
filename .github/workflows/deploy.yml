@@ -46,5 +46,5 @@ jobs:
       # Resgata os logs da pod
       - name: Get logs from pod
         run: |
-          POD_NAME=$(kubectl get pods --selector=app=myburger -o jsonpath='{.items[0].metadata.name}')
+          POD_NAME=$(kubectl get pods --selector=app=myburger-order -o jsonpath='{.items[0].metadata.name}')
           kubectl logs $POD_NAME
