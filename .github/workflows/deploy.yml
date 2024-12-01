@@ -41,7 +41,7 @@ jobs:
       # Atualizar a imagem do deployment
       - name: Update Image
         run: |
-          kubectl set image deployment/myburger myburger=${{ env.IMAGE_NAME }}
+          kubectl set image deployment/myburger-order myburger-order=${{ env.IMAGE_NAME }}
 
       # Resgata os logs da pod
       - name: Get logs from pod
