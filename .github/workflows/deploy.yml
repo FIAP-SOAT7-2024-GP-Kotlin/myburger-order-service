@@ -6,14 +6,13 @@ on:
     types:
       - completed
 
-env:
-  REPO_NAME: ${{ github.event.repository.name }}
-  IMAGE_NAME: fiapmyburguer/${{ env.REPO_NAME }}:latest
-
 jobs:
   deploy:
     name: Deploy to DigitalOcean
     runs-on: ubuntu-latest
+    env:
+      REPO_NAME: ${{ github.event.repository.name }}
+      IMAGE_NAME: fiapmyburguer/${{ env.REPO_NAME }}:latest
 
     if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' }}
 
