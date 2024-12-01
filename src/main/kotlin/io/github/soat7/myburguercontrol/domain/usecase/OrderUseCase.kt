@@ -16,33 +16,24 @@ private val logger = KotlinLogging.logger {}
 
 class OrderUseCase(
     private val orderGateway: OrderGateway,
-    private val customerUseCase: CustomerUseCase,
+    private val paymentUseCase: PaymentUseCase,
 ) {
 
     fun createOrder(orderDetail: OrderDetail): Order {
-        val customer = orderDetail.customerCpf
-            ?.takeIf { it.isNotBlank() }
-            ?.let {
-                customerUseCase.findCustomerByCpf(it)
-                    ?: throw ReasonCodeException(ReasonCode.CUSTOMER_NOT_FOUND)
-            }
-
         return orderGateway.create(
             Order(
                 id = UUID.randomUUID(),
-                customerId = customer?.id,
+                customerId = orderDetail.customerId,
                 items = buildOrderItems(orderDetail),
                 status = OrderStatus.RECEIVED,
             ),
         )
     }
 
-    fun findOrdersByCustomerCpf(cpf: String): List<Order> {
-        logger.info { "Order.findOrders(cpf = $cpf)" }
-        val customer = customerUseCase.findCustomerByCpf(cpf)
-            ?: throw ReasonCodeException(ReasonCode.CUSTOMER_NOT_FOUND)
+    fun findOrdersByCustomerId(customerId: UUID): List<Order> {
+        logger.info { "Order.findOrders(customerId = $customerId)" }
 
-        return orderGateway.findByCustomerId(customer.id)
+        return orderGateway.findByCustomerId(customerId)
     }
 
     fun findQueuedOrders(pageable: Pageable): Page<Order> {
@@ -60,6 +51,24 @@ class OrderUseCase(
         return orderGateway.findById(orderId)
             ?.let { orderGateway.update(it.copy(status = status)) }
             ?: throw ReasonCodeException(ReasonCode.ORDER_NOT_FOUND)
+    }
+
+    fun sendOrderPayment(orderId: UUID): Order {
+        logger.info { "Sending order payment" }
+
+        val order = orderGateway.findById(orderId)
+            ?: throw ReasonCodeException(ReasonCode.ORDER_NOT_FOUND)
+
+        val paymentId = UUID.randomUUID()
+
+        paymentUseCase.sendPaymentRequest(order, paymentId)
+
+        return orderGateway.update(
+            order.copy(
+                paymentId = paymentId,
+                status = OrderStatus.PENDING_PAYMENT,
+            ),
+        )
     }
 
     private fun buildOrderItems(orderDetail: OrderDetail): List<OrderItem> {

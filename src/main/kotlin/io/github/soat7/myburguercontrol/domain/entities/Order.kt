@@ -11,7 +11,7 @@ data class Order(
     val id: UUID,
     val customerId: UUID? = null,
     val items: List<OrderItem> = listOf(),
-    val status: OrderStatus = OrderStatus.RECEIVED,
+    val status: OrderStatus = OrderStatus.PENDING_PAYMENT,
     val createdAt: Instant = Instant.now(),
     val paymentId: UUID? = null,
 ) {

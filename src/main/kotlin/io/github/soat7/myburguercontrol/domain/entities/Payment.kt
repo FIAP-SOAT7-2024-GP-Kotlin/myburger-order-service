@@ -10,4 +10,5 @@ data class Payment(
     val authorizationId: String? = null,
     val createdAt: Instant = Instant.now(),
     val updatedAt: Instant = Instant.now(),
+    val metadata: Map<String, Any> = emptyMap(),
 )

@@ -42,11 +42,11 @@ class OrderController(
     @GetMapping
     @Operation(
         tags = ["2 - Jornada do Pedido"],
-        summary = "Utilize esta rota para encontrar o(s) pedido(s) por cpf de cliente",
-        description = "Utilize esta rota para encontrar o(s) pedido(s) por cpf de cliente",
+        summary = "Utilize esta rota para encontrar o(s) pedido(s) por Id de cliente",
+        description = "Utilize esta rota para encontrar o(s) pedido(s) por Id de cliente",
     )
-    fun findOrdersByCpf(@RequestParam("cpf") cpf: String): ResponseEntity<List<OrderResponse>> =
-        ResponseEntity.ok(orderHandler.findOrdersByCustomerCpf(cpf))
+    fun findOrdersById(@RequestParam("customerId") customerId: UUID): ResponseEntity<List<OrderResponse>> =
+        ResponseEntity.ok(orderHandler.findOrdersByCustomerId(customerId))
 
     @GetMapping("/queue")
     @Operation(
@@ -91,6 +91,12 @@ class OrderController(
                 pageSize = response.size,
             ),
         )
+    }
+
+    @PostMapping("/payment", consumes = [MediaType.APPLICATION_JSON_VALUE])
+    fun sendPayment(@RequestBody orderId: UUID): ResponseEntity<Unit> {
+        orderHandler.sendOrderPayment(orderId)
+        return ResponseEntity.noContent().build()
     }
 
     @PostMapping("/received", consumes = [MediaType.APPLICATION_JSON_VALUE])

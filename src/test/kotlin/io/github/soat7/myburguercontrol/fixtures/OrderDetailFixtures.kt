@@ -6,10 +6,10 @@ import java.util.UUID
 object OrderDetailFixtures {
 
     fun mockOrderDetail(
-        cpf: String,
+        customerId: UUID,
         id: UUID = UUID.randomUUID(),
     ) = OrderDetail(
-        customerCpf = cpf,
+        customerId = customerId,
         items = listOf(
             OrderDetail.OrderItemDetail(
                 productId = id,

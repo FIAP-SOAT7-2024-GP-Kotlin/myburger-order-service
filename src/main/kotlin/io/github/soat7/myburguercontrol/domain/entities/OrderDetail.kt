@@ -4,7 +4,7 @@ import java.math.BigDecimal
 import java.util.UUID
 
 data class OrderDetail(
-    val customerCpf: String? = null,
+    val customerId: UUID,
     val items: List<OrderItemDetail>,
     val comment: String? = null,
 ) {

@@ -72,6 +72,22 @@ jobs:
         message: 'commit badge'
         add: '*.svg'
 
+    - name: Run SonarQube Analysis
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: |
+        ./gradlew \
+        -Dsonar.projectKey=FIAP-SOAT7-2024-GP-Kotlin_myburger-order-service \
+        -Dsonar.host.url=https://sonarcloud.io \
+        -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+        -Dsonar.organization=fiap-soat7-2024-gp-kotlin \
+        -Dsonar.coverage.jacoco.xmlReportPaths=build/reports/jacoco/test/jacoco.xml \
+        -Dsonar.sources=src \
+        -Dsonar.java.coveragePlugin=jacoco \
+        -Dsonar.exclusions=**/src/test/**/*,**/Application.kt,**/exception/**/*,**/config/**/*,**/mock/**/*,**/*Configuration.kt,**/*Config.kt,**/model/**,**/enum/**,**/common/**,**/mapper/**,*/Application* \
+        -Dsonar.tests=src/test/kotlin \
+        sonar
+
     - name: Authentication Docker Hub
       uses: docker/login-action@v3.2.0
       with:
