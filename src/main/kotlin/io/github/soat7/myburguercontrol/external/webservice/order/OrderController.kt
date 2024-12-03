@@ -94,8 +94,8 @@ class OrderController(
     }
 
     @PostMapping("/payment", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun sendPayment(@RequestBody orderId: UUID): ResponseEntity<Unit> {
-        orderHandler.sendOrderPayment(orderId)
+    fun sendPayment(@RequestBody orderId: String): ResponseEntity<Unit> {
+        orderHandler.sendOrderPayment(UUID.fromString(orderId))
         return ResponseEntity.noContent().build()
     }
 
