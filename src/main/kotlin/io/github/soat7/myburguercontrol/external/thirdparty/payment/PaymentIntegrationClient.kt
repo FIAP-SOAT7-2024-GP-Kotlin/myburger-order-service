@@ -14,7 +14,6 @@ import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClientResponseException
 import org.springframework.web.client.RestTemplate
-import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 
@@ -24,9 +23,9 @@ class PaymentIntegrationClient(
     @Qualifier("paymentRestTemplate") private val paymentRestTemplate: RestTemplate,
 ) : PaymentIntegrationRepository {
 
-    override fun requestPayment(order: Order, paymentId: UUID) {
+    override fun requestPayment(order: Order) {
         try {
-            val orderToRequest = order.toPaymentRequest(paymentId)
+            val orderToRequest = order.toPaymentRequest()
 
             logger.info { "Requesting PaymentData with [payload: $orderToRequest]" }
 
@@ -45,7 +44,7 @@ class PaymentIntegrationClient(
                 throw ReasonCodeException(ReasonCode.UNEXPECTED_ERROR)
             }
         } catch (ex: RestClientResponseException) {
-            logger.warn { "Integration error" }
+            logger.error { "Integration error" }
             throw ex
         }
     }

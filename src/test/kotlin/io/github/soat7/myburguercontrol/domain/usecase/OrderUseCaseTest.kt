@@ -133,13 +133,13 @@ class OrderUseCaseTest {
         val paymentId = UUID.randomUUID()
 
         every { gateway.findById(any()) } returns order
-        every { paymentUseCase.sendPaymentRequest(any(), any()) } just runs
+        every { paymentUseCase.sendPaymentRequest(any()) } just runs
         every { gateway.update(any()) } returns order.copy(paymentId = paymentId, status = OrderStatus.PENDING_PAYMENT)
 
         assertDoesNotThrow { service.sendOrderPayment(order.id) }
 
         verify(exactly = 1) { gateway.findById(any()) }
-        verify(exactly = 1) { paymentUseCase.sendPaymentRequest(any(), any()) }
+        verify(exactly = 1) { paymentUseCase.sendPaymentRequest(any()) }
         verify(exactly = 1) { gateway.update(any()) }
     }
 
@@ -153,7 +153,7 @@ class OrderUseCaseTest {
         }
 
         verify(exactly = 1) { gateway.findById(any()) }
-        verify(exactly = 0) { paymentUseCase.sendPaymentRequest(any(), any()) }
+        verify(exactly = 0) { paymentUseCase.sendPaymentRequest(any()) }
         verify(exactly = 0) { gateway.update(any()) }
     }
 }
