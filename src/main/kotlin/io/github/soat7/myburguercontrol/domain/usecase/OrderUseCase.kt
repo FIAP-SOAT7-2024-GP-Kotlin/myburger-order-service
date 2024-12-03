@@ -61,7 +61,7 @@ class OrderUseCase(
 
         val paymentId = UUID.randomUUID()
 
-        paymentUseCase.sendPaymentRequest(order, paymentId)
+        paymentUseCase.sendPaymentRequest(order)
 
         return orderGateway.update(
             order.copy(

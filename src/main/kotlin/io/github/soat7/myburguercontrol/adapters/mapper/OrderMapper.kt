@@ -12,7 +12,6 @@ import io.github.soat7.myburguercontrol.external.webservice.order.api.OrderCreat
 import io.github.soat7.myburguercontrol.external.webservice.order.api.OrderItemResponse
 import io.github.soat7.myburguercontrol.external.webservice.order.api.OrderResponse
 import java.time.Instant
-import java.util.UUID
 
 fun OrderCreationRequest.toOrderDetails() = OrderDetail(
     customerId = this.customerId,
@@ -78,11 +77,10 @@ fun OrderItemEntity.toDomain() = OrderItem(
     comment = this.comment,
 )
 
-fun Order.toPaymentRequest(paymentId: UUID) = PaymentIntegrationRequest(
-    description = "",
-    externalReference = paymentId.toString(),
-    items = items.map { it.toPaymentRequestItem() },
-    totalAmount = this.total,
+fun Order.toPaymentRequest() = PaymentIntegrationRequest(
+    orderId = this.id.toString(),
+    orderItems = items.map { it.toPaymentRequestItem() },
+    orderPrice = this.total,
 )
 
 fun OrderItem.toPaymentRequestItem() = Item(
