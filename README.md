@@ -6,7 +6,10 @@ ___
 
 ## `myburgercontrol-clean-arch`
 
-Este projeto é um monolito para o curso de Software Architeture da turma 7SOAT na instituição FIAP no ano de 2024.
+Este é um microservice de Pedidos, que faz parte da aplicação MyburgerControl, desenvolvido para o curso de Software Architeture da turma 7SOAT na instituição FIAP no ano de 2024.
+
+Video demostração: 
+(https://www.youtube.com/watch?v=vr1br-s-Adk&ab_channel=VidaExtra)
 ___
 
 ## Índice
