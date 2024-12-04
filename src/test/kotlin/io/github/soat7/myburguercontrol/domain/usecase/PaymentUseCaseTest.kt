@@ -4,9 +4,7 @@ import io.github.soat7.myburguercontrol.adapters.gateway.PaymentIntegrationRepos
 import io.github.soat7.myburguercontrol.fixtures.OrderFixtures.mockOrder
 import io.mockk.clearMocks
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
-import io.mockk.runs
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.TestInstance
@@ -33,7 +31,7 @@ class PaymentUseCaseTest {
     @Order(1)
     fun `should try to request payment successfully using an external service`() {
         val order = mockOrder()
-        every { paymentIntegrationRepository.requestPayment(any<OrderModel>()) } just runs
+        every { paymentIntegrationRepository.requestPayment(any<OrderModel>()) } returns ""
 
         val response = assertDoesNotThrow {
             service.sendPaymentRequest(order)
