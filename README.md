@@ -1,3 +1,6 @@
+## Video demostração: 
+https://www.youtube.com/watch?v=vr1br-s-Adk&ab_channel=VidaExtra
+
 [![CI [MyBurguer - Order Service]](https://github.com/FIAP-SOAT7-2024-GP-Kotlin/myburger-order-service/actions/workflows/main.yml/badge.svg)](https://github.com/FIAP-SOAT7-2024-GP-Kotlin/myburger-order-service/actions/workflows/main.yml)
 
 [![Coverage](.github/badges/jacoco.svg)](https://github.com/FIAP-SOAT7-2024-GP-Kotlin/myburger-order-service/actions/workflows/main.yml)
@@ -8,8 +11,7 @@ ___
 
 Este é um microservice de Pedidos, que faz parte da aplicação MyburgerControl, desenvolvido para o curso de Software Architeture da turma 7SOAT na instituição FIAP no ano de 2024.
 
-Video demostração: 
-(https://www.youtube.com/watch?v=vr1br-s-Adk&ab_channel=VidaExtra)
+
 ___
 
 ## Índice
