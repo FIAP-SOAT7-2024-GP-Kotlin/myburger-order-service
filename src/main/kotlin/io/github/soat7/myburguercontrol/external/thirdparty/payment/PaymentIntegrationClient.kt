@@ -27,7 +27,7 @@ class PaymentIntegrationClient(
         try {
             val orderToRequest = order.toPaymentRequest()
 
-            logger.info { "Requesting PaymentData with [payload: $orderToRequest] at [url $paymentServiceUrl]"}
+            logger.info { "Requesting PaymentData with [payload: $orderToRequest] at [url: $paymentServiceUrl]" }
 
             val response = paymentRestTemplate.exchange(
                 paymentServiceUrl,
@@ -39,7 +39,8 @@ class PaymentIntegrationClient(
             if (response.body != null) {
                 return response.body!!.qrData
             } else {
-                throw ReasonCodeException(ReasonCode.PAYMENT_INTEGRATION_ERROR)            }
+                throw ReasonCodeException(ReasonCode.PAYMENT_INTEGRATION_ERROR)
+            }
         } catch (ex: RestClientResponseException) {
             logger.error { "Integration error" }
             throw ex
