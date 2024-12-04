@@ -95,6 +95,11 @@ class OrderController(
     }
 
     @PostMapping("/{orderId}/payment", consumes = [MediaType.APPLICATION_JSON_VALUE])
+    @Operation(
+        tags = ["2 - Jornada do Pedido"],
+        summary = "Utilize esta rota para enviar o pedido para o pagamento",
+        description = "Utilize esta rota para enviar o pedido para o pagamento",
+    )
     fun sendPayment(@PathVariable orderId: String): ResponseEntity<Unit> {
         orderHandler.sendOrderPayment(UUID.fromString(orderId))
         return ResponseEntity.noContent().build()
