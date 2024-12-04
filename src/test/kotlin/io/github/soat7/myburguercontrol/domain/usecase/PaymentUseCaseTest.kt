@@ -33,7 +33,7 @@ class PaymentUseCaseTest {
     @Order(1)
     fun `should try to request payment successfully using an external service`() {
         val order = mockOrder()
-        every { paymentIntegrationRepository.requestPayment(any<OrderModel>()) } just runs
+        every { paymentIntegrationRepository.requestPayment(any<OrderModel>()) } returns ""
 
         val response = assertDoesNotThrow {
             service.sendPaymentRequest(order)

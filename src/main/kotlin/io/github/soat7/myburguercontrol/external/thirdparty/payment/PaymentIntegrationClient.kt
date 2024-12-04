@@ -23,26 +23,23 @@ class PaymentIntegrationClient(
     @Qualifier("paymentRestTemplate") private val paymentRestTemplate: RestTemplate,
 ) : PaymentIntegrationRepository {
 
-    override fun requestPayment(order: Order) {
+    override fun requestPayment(order: Order): String {
         try {
             val orderToRequest = order.toPaymentRequest()
 
-            logger.info { "Requesting PaymentData with [payload: $orderToRequest]" }
+            logger.info { "Requesting PaymentData with [payload: $orderToRequest] at [url $paymentServiceUrl]"}
 
             val response = paymentRestTemplate.exchange(
                 paymentServiceUrl,
                 HttpMethod.POST,
                 HttpEntity(orderToRequest),
                 PaymentResponse::class.java,
-            ).also { logger.info { "Received response ${it.body}" } }
+            ).also { logger.info { "Received response ${it.body?.qrData}" } }
 
-            if (response.statusCode.isError) {
-                run {
-                    throw ReasonCodeException(ReasonCode.PAYMENT_INTEGRATION_ERROR)
-                }
+            if (response.body != null) {
+                return response.body!!.qrData
             } else {
-                throw ReasonCodeException(ReasonCode.UNEXPECTED_ERROR)
-            }
+                throw ReasonCodeException(ReasonCode.PAYMENT_INTEGRATION_ERROR)            }
         } catch (ex: RestClientResponseException) {
             logger.error { "Integration error" }
             throw ex
