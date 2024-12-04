@@ -155,6 +155,7 @@ tasks.jacocoTestReport {
                         exclude("**/common/**")
                         exclude("**/exception/*")
                         exclude("*/Application*")
+                        exclude("*/external*")
                     }
                 },
             ),
