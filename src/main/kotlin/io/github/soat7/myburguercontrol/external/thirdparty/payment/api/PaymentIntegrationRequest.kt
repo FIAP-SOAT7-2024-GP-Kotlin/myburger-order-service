@@ -8,12 +8,13 @@ import java.math.BigDecimal
 data class PaymentIntegrationRequest(
     val orderItems: List<Item>,
     val orderPrice: BigDecimal,
-    val title: String = "Order",
     val orderId: String,
 )
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
 data class Item(
+    val title: String = "Order",
+    val description: String = "description",
     val unitPrice: BigDecimal,
     val quantity: Int,
     val unitMeasure: String,
