@@ -4,9 +4,7 @@ import io.github.soat7.myburguercontrol.adapters.gateway.PaymentIntegrationRepos
 import io.github.soat7.myburguercontrol.fixtures.OrderFixtures.mockOrder
 import io.mockk.clearMocks
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
-import io.mockk.runs
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.TestInstance
